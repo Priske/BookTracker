@@ -3,11 +3,12 @@ using System.Net.Http.Json;
 using BookTracker.Api.Application.BookList;
 using Microsoft.AspNetCore.Mvc.Testing;
 
+
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 
 public class BookListTests
 {
-    private readonly WebApplicationFactory<Program> factory = new();
+    private readonly CustomWebApplicationFactory factory = new();
 
     [Fact]
     public async Task GetBooksReturnsBooks()
