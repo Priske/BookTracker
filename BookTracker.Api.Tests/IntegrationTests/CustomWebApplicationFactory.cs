@@ -11,6 +11,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private SqliteConnection connection = null!;
 
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -41,4 +42,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         base.Dispose(disposing);
         connection.Dispose();
     }
+
+    public EfReader GetReader() => new(Services);
+
+    public EfWriter GetWriter() => new(Services);
 }
