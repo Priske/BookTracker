@@ -39,13 +39,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            connection?.Dispose();
-        }
-
         base.Dispose(disposing);
+        connection.Dispose();
     }
+
     public EfReader GetReader() => new(Services);
 
     public EfWriter GetWriter() => new(Services);
