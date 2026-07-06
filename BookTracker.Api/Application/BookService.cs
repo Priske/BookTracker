@@ -42,4 +42,12 @@ public class BookService(IBookRepository bookRepository)
                 // map de velden van de `savedBook` entiteit naar de properties van de response DTO
             };
     }
+
+    public async Task<bool> DeleteBook(int id)
+    {
+        return await bookRepository.DeleteAsync(id);
+
+        // ... roep hier de juiste methode van IBookRepository aan
+    }
+
 }

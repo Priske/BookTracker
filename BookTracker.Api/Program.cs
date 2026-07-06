@@ -32,6 +32,18 @@ app.MapPost("/books", async (CreateBookRequest request, BookService service) =>
     var response = await service.CreateBook(request);
     return Results.Created($"/books/{response.Id}", response);
 });
+app.MapDelete("/books/{id:int}", async (int id, BookService service) =>
+        {
+            var deleted = await service.DeleteBook(id);
+
+            if (!deleted)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.NoContent();
+        });
+
 
 app.Run();
 

@@ -14,3 +14,9 @@ Content-Type: application/json
   "author": "Frank Herbert",
   "year": 1965
 }
+
+### Delete Book
+DELETE http://localhost:5234/books/1
+###Delete Book Not Found
+
+DELETE http://localhost:5234/books/9999
