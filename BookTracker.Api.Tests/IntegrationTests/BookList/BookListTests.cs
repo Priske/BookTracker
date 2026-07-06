@@ -2,46 +2,30 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.BookList;
 using BookTracker.Api.Domain;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 
-public class BookListTests
+public class BookListTests : IntegrationTest
 {
-    private readonly CustomWebApplicationFactory factory = new();
-    /*
-        [Fact]
-        public async Task GetBooksReturnsBooks()
-        {
-            var client = factory.CreateClient();
 
-            var response = await client.GetAsync("/books");
-            var books = await response.Content.ReadFromJsonAsync<List<BookInfo>>();
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            Assert.NotNull(books);
-            Assert.Empty(books);
-        }
-    */
 
     [Fact]
     public async Task GetBooksReturnsBooks()
     {
-        var writer = factory.GetWriter();
-        writer.Seed(db => db.Books.Add(
-            new Book
-            {
-                Title = "Cannery Row",
-                Author = "John Steinbeck",
-                Year = 1945
-            }
-        ));
 
-        var client = factory.CreateClient();
+        Writer.Seed(db => db.Books.Add(
+                new Book
+                {
+                    Title = "Cannery Row",
+                    Author = "John Steinbeck",
+                    Year = 1945
+                }
+            ));
 
-        var response = await client.GetAsync("/books");
+
+
+        var response = await Client.GetAsync("/books");
         var books = await response.Content.ReadFromJsonAsync<List<BookInfo>>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
