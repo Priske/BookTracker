@@ -15,8 +15,8 @@ public class BookService(IBookRepository bookRepository)
         var summary = books.Select(book => new BookInfo
         {
             Id = book.Id,
-            Title = book.Title,
-            Author = book.Author,
+            Title = book.Title.Value,
+            Author = book.Author.Value,
 
         });
         return [.. summary];
@@ -27,23 +27,23 @@ public class BookService(IBookRepository bookRepository)
         var book =
             new Book
             {
-                Author = request.Author,
-                Title = request.Title,
-                Year = request.Year,
-                // map de velden van request naar de properties van dit nieuwe object
+                Title = new BookTitle(request.Title),
+                Author = new AuthorName(request.Author),
+                Year = request.Year
             };
+
         var savedBook = await bookRepository.AddAsync(book);
+
         return
             new CreateBookResponse
             {
                 Id = savedBook.Id,
-                Title = savedBook.Title,
-                Author = savedBook.Author,
+                Title = savedBook.Title.Value,
+                Author = savedBook.Author.Value,
                 Year = savedBook.Year
-
-                // map de velden van de `savedBook` entiteit naar de properties van de response DTO
             };
     }
+
 
     public async Task<bool> DeleteBook(int id)
     {
@@ -58,8 +58,8 @@ public class BookService(IBookRepository bookRepository)
             new Book
             {
                 Id = id,
-                Title = request.Title,
-                Author = request.Author,
+                Title = new BookTitle(request.Title),
+                Author = new AuthorName(request.Author),
                 Year = request.Year
             };
 
@@ -79,8 +79,8 @@ public class BookService(IBookRepository bookRepository)
             new BookDetails
             {
                 Id = book.Id,
-                Title = book.Title,
-                Author = book.Author,
+                Title = book.Title.Value,
+                Author = book.Author.Value,
                 Year = book.Year
             };
     }

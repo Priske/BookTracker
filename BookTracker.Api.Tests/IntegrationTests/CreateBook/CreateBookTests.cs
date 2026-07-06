@@ -32,8 +32,8 @@ public class CreateBookTests : IntegrationTest
         var book = Reader.Query(context => context.Find<Book>(created.Id));
 
         Assert.NotNull(book);
-        Assert.Equal("The Heart Is a Lonely Hunter", book.Title);
-        Assert.Equal("Carson McCullers", book.Author);
+        Assert.Equal("The Heart Is a Lonely Hunter", book.Title.Value);
+        Assert.Equal("Carson McCullers", book.Author.Value);
         Assert.Equal(1940, book.Year);
     }
 }
