@@ -1,4 +1,3 @@
-using BookTracker.Api.Application;
 using BookTracker.Api.Storage;
 using BookTracker.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
