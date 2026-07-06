@@ -27,8 +27,6 @@ public class DeleteBookTests : IntegrationTest
         var response = await Client.DeleteAsync("/books/1");
 
 
-
-
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         var book = Reader.Query(db => db.Books.Find(1));
 
