@@ -1,11 +1,10 @@
 using BookTracker.Api.Application;
 using BookTracker.Api.Application.CreateBook;
+using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Storage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-//builder.Services.AddSingleton<IBookRepository, InMemoryBookRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -28,15 +27,28 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/books", async (BookService service) => Results.Ok(await service.GetAllBooks()));
 app.MapPost("/books", async (CreateBookRequest request, BookService service) =>
-{
-    var response = await service.CreateBook(request);
-    return Results.Created($"/books/{response.Id}", response);
-});
+        {
+            var response = await service.CreateBook(request);
+            return Results.Created($"/books/{response.Id}", response);
+        });
+
 app.MapDelete("/books/{id:int}", async (int id, BookService service) =>
         {
             var deleted = await service.DeleteBook(id);
 
             if (!deleted)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.NoContent();
+        });
+
+app.MapPut("/books/{id:int}", async (int id, UpdateBookRequest request, BookService service) =>
+        {
+            var updated = await service.UpdateBook(id, request);
+
+            if (!updated)
             {
                 return Results.NotFound();
             }
