@@ -15,7 +15,6 @@ public class BookTitleTests
     public void BookTitleTrimsValue()
     {
         var title = new BookTitle("  Dune  ");
-
         Assert.Equal("Dune", title.Value);
     }
 
@@ -23,7 +22,6 @@ public class BookTitleTests
     public void BookTitleRejectsWhitespace()
     {
         var exception = Assert.Throws<DomainException>(() => new BookTitle("   "));
-
         Assert.Equal("Title is required.", exception.Message);
     }
 
@@ -31,9 +29,16 @@ public class BookTitleTests
     public void BookTitleRejectsTitleLongerThan100Characters()
     {
         var tooLong = new string('x', 101);
-
         var exception = Assert.Throws<DomainException>(() => new BookTitle(tooLong));
 
         Assert.Equal("Title cannot be longer than 100 characters.", exception.Message);
     }
+
+    [Fact]
+    public void BookTitleRejectsNullInput()
+    {
+        var exception = Assert.Throws<DomainException>(() => new BookTitle(null));
+        Assert.Equal("Title is required.", exception.Message);
+    }
+
 }

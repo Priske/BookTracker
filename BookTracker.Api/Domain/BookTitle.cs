@@ -8,7 +8,7 @@ public sealed record BookTitle
 
     public BookTitle(string value)
     {
-        var cleaned = value.Trim();
+        var cleaned = value?.Trim();
 
         if (string.IsNullOrWhiteSpace(cleaned))
         {

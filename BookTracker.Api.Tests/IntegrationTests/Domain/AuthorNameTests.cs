@@ -1,6 +1,6 @@
 using BookTracker.Api.Domain;
 
-namespace BookTracker.Api.Tests.IntegrationTests.GetBookSummaries;
+namespace BookTracker.Api.Tests.IntegrationTests.Domain;
 
 public class AuthorNameTests
 {
@@ -26,8 +26,6 @@ public class AuthorNameTests
         Assert.Equal("Author is required.", exception.Message);
     }
 
-
-    // Voeg hier de test 'AuthorNameRejectsNameLongerThan100Characters' toe
     [Fact]
     public void AuthorNameRejectsNameLongerThan100Characters()
     {
@@ -35,6 +33,13 @@ public class AuthorNameTests
             "efmuqsqnxtbfadqrkewdnefmksjagaplixrulfeywivafhyocycsgxaqyeedwegwgdcnjrfqzsydnpwbpjuozmsbvsrsqfkzmtmon"));
         Assert.Equal("Author cannot be longer than 100 characters.", exception.Message);
 
+    }
+
+    [Fact]
+    public void AuthorNameRejectsNullInput()
+    {
+        var exception = Assert.Throws<DomainException>(() => new AuthorName(null));
+        Assert.Equal("Author is required.", exception.Message);
     }
 
 }
