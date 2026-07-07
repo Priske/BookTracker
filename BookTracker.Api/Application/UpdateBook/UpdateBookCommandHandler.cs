@@ -1,12 +1,9 @@
-
-
-using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
 using BookTracker.Api.Storage;
 
 namespace BookTracker.Api.Application.UpdateBook;
 
-public class UpdateBookCommandHandler(IBookRepository bookRepository)
+public class UpdateBookCommandHandler(IBookRepository bookRepository) : IHandler
 {
     public async Task<bool> Execute(int id, UpdateBookRequest request)
     {

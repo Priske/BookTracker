@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ### Delete Book
-DELETE http://localhost:5234/books/1
+DELETE http://localhost:5234/books/501
 ###Delete Book Not Found
 
 DELETE http://localhost:5234/books/9999
