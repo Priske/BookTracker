@@ -1,4 +1,4 @@
-using BookTracker.Api.Endpoints;
+using BookTracker.Api.Endpoints.Books;
 using BookTracker.Api.Seeding;
 using BookTracker.Api.Storage;
 
