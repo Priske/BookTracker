@@ -10,8 +10,6 @@ public class DeleteBookTests : IntegrationTest
     [Fact]
     public async Task DeleteBookRemovesBook()
     {
-
-
         Writer.Seed(db =>
         {
             db.Books.Add(
@@ -26,6 +24,8 @@ public class DeleteBookTests : IntegrationTest
 
         var response = await Client.DeleteAsync("/books/1");
 
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         var book = Reader.Query(db => db.Books.Find(1));
@@ -39,6 +39,6 @@ public class DeleteBookTests : IntegrationTest
 
         var response = await Client.DeleteAsync("/books/9999");
 
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
     }
 }

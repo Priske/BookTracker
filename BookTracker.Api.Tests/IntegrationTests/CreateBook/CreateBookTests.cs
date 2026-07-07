@@ -20,7 +20,7 @@ public class CreateBookTests : IntegrationTest
                 Year = 1940
             };
         var response = await Client.PostAsJsonAsync("/books", request);
-        var created = await response.Content.ReadFromJsonAsync<CreateBookResponse>();
+        var created = await response.ReadJsonAs<CreateBookResponse>(HttpStatusCode.Created);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(created);
