@@ -1,15 +1,13 @@
 using System.Net;
-using BookTracker.Api.Application.GetBookById;
+using BookTracker.Api.Application.GetBookDetails;
 using BookTracker.Api.Domain;
 
-namespace BookTracker.Api.Tests.IntegrationTests.GetBookById;
+namespace BookTracker.Api.Tests.IntegrationTests.GetBookDetails;
 
-public class GetBookByIdTests : IntegrationTest
+public class GetBookDetails : IntegrationTest
 {
-
-
     [Fact]
-    public async Task GetBookByIdReturnsBook()
+    public async Task GetBookDetailsReturnsBook()
     {
         Writer.Seed(db =>
         {
@@ -22,10 +20,8 @@ public class GetBookByIdTests : IntegrationTest
                 });
         });
 
-
-
         var response = await Client.GetAsync("/books/1");
-        var book = await response.ReadJsonAs<BookDetails>(HttpStatusCode.OK);
+        var book = await response.ReadJsonAs<GetBookDetailsResponse>(HttpStatusCode.OK);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(book);
@@ -36,10 +32,9 @@ public class GetBookByIdTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBookByIdReturnsNotFoundWhenBookDoesNotExist()
+    public async Task GetBookDetailsReturnsNotFoundWhenBookDoesNotExist()
     {
         var response = await Client.GetAsync("/books/9999");
         await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
-        // Implementeer deze test
     }
 }

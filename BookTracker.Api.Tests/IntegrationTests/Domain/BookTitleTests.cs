@@ -1,6 +1,6 @@
 using BookTracker.Api.Domain;
 
-namespace BookTracker.Api.Tests.Domain;
+namespace BookTracker.Api.Tests.IntegrationTests.Domain;
 
 public class BookTitleTests
 {
@@ -8,7 +8,6 @@ public class BookTitleTests
     public void BookTitleAcceptsValidTitle()
     {
         var title = new BookTitle("Dune");
-
         Assert.Equal("Dune", title.Value);
     }
 

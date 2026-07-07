@@ -1,4 +1,4 @@
-namespace BookTracker.Api.Application.BookList;
+namespace BookTracker.Api.Application.GetBookSummaries;
 
 public class GetBookListRequest
 {

@@ -1,6 +1,6 @@
 using BookTracker.Api.Domain;
 
-namespace BookTracker.Api.Tests.Domain;
+namespace BookTracker.Api.Tests.IntegrationTests.GetBookSummaries;
 
 public class AuthorNameTests
 {

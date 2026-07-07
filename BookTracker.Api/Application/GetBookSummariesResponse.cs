@@ -1,6 +1,6 @@
 namespace BookTracker.Api.Application;
 
-public class PagedResult<T>
+public class GetBookSummariesResponse<T>
 {
     public required IReadOnlyList<T> Items { get; set; }
 
