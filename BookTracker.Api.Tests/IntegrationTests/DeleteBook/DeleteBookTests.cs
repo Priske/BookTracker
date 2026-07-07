@@ -5,8 +5,6 @@ namespace BookTracker.Api.Tests.IntegrationTests.DeleteBook;
 
 public class DeleteBookTests : IntegrationTest
 {
-
-
     [Fact]
     public async Task DeleteBookRemovesBook()
     {
