@@ -36,6 +36,7 @@ public class GetBookListQuery(AppDbContext dbContext)
     public async Task<PagedResult<BookInfo>> Execute(GetBookListRequest request)
     {
         var page = Math.Max(1, request.Page ?? DefaultPage);
+
         var pageSize = Math.Clamp(request.PageSize ?? DefaultPageSize, MinPage, MaxPageSize);
 
         var totalItems = await dbContext.Books.CountAsync();
