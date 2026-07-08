@@ -42,4 +42,20 @@ public class MemberNameTests
         Assert.Equal("Member is required.", exception.Message);
     }
 
+    [Fact]
+    public void MemberNameToStringReturnsValue()
+    {
+        var member = new MemberName("John Doe");
+
+        Assert.Equal("John Doe", member.ToString());
+    }
+    [Fact]
+    public void MemberNameImplicitlyConvertsToString()
+    {
+        var member = new MemberName("John Doe");
+
+        string value = member;
+
+        Assert.Equal("John Doe", value);
+    }
 }

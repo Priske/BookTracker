@@ -49,5 +49,21 @@ public class MemberEmailTests
         >(() => new MemberEmail("Testemail.com"));
         Assert.Equal("Email must contain the @ symbol", exception.Message);
     }
+    [Fact]
+    public void MemberEmailToStringReturnsValue()
+    {
+        var email = new MemberEmail("test@email.com");
+
+        Assert.Equal("test@email.com", email.ToString());
+    }
+    [Fact]
+    public void MemberEmailImplicitlyConvertsToString()
+    {
+        var email = new MemberEmail("test@email.com");
+
+        string value = email;
+
+        Assert.Equal("test@email.com", value);
+    }
 
 }

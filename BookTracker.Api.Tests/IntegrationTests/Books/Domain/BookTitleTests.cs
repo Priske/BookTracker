@@ -41,5 +41,22 @@ public class BookTitleTests
         var exception = Assert.Throws<DomainException>(() => new BookTitle(null));
         Assert.Equal("Title is required.", exception.Message);
     }
+    [Fact]
+    public void BookTitleToStringReturnsValue()
+    {
+        var title = new BookTitle("The Hobbit");
+
+        Assert.Equal("The Hobbit", title.ToString());
+    }
+
+    [Fact]
+    public void BookTitleImplicitlyConvertsToString()
+    {
+        var title = new BookTitle("The Hobbit");
+
+        string value = title;
+
+        Assert.Equal("The Hobbit", value);
+    }
 
 }

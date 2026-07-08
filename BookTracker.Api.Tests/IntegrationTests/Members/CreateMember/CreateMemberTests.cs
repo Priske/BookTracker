@@ -9,7 +9,7 @@ public class CreatMemberTests : IntegrationTest
 {
 
     [Fact]
-    public async Task PostMemberCreatesBook()
+    public async Task PostMemberCreatesMember()
     {
         var request =
             new CreateMemberRequest
@@ -32,5 +32,34 @@ public class CreatMemberTests : IntegrationTest
         Assert.NotNull(member);
         Assert.Equal("PP@PePe.com", member.Email);
         Assert.Equal("For Petes Sake", member.Name);
+    }
+
+
+    [Fact]
+    public async Task PostMemberWhitespaceReturnsBadRequest()
+    {
+        var request = new CreateMemberRequest
+        {
+            Name = "    ",
+            Email = "PP@PePe.com",
+        };
+
+        var response = await Client.PostAsJsonAsync("/members", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostMemberInvalidEmailReturnsBadRequest()
+    {
+        var request = new CreateMemberRequest
+        {
+            Name = "For Petes Sake",
+            Email = "PPPePe.com",
+        };
+
+        var response = await Client.PostAsJsonAsync("/members", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

@@ -97,7 +97,7 @@ public class GetMemberSummariesTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetMemberSummariesCanSearchByTitle()
+    public async Task GetMemberSummariesCanSearchByEmail()
     {
         Writer.Seed(db =>
         {
@@ -125,6 +125,38 @@ public class GetMemberSummariesTests : IntegrationTest
         Assert.Equal(1, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
+
+
+    [Fact]
+    public async Task GetMemberSummariesCanSearchByName()
+    {
+        Writer.Seed(db =>
+        {
+            db.Members.AddRange(
+                new Member
+                {
+                    Name = new MemberName("Jefke 3"),
+                    Email = new MemberEmail("Jefke3@jef.jef")
+                },
+                new Member
+                {
+                    Name = new MemberName("Karl"),
+                    Email = new MemberEmail("Karl@Marx.de")
+                });
+        });
+
+        var response = await Client.GetAsync("/members?search=Karl");
+
+        var result = await response.ReadJsonAs<GetMemberSummariesResponse>(HttpStatusCode.OK);
+
+        var member = Assert.Single(result.Items);
+
+        Assert.Equal("Karl", member.Name);
+        Assert.Equal("Karl@Marx.de", member.Email);
+        Assert.Equal(1, result.TotalItems);
+        Assert.Equal(1, result.TotalPages);
+    }
+
 
     [Fact]
     public async Task GetMemberSummariesAppliesPagingAfterSearch()

@@ -42,4 +42,21 @@ public class AuthorNameTests
         Assert.Equal("Author is required.", exception.Message);
     }
 
+    [Fact]
+    public void AuthorNameToStringReturnsValue()
+    {
+        var author = new AuthorName("George Orwell");
+
+        Assert.Equal("George Orwell", author.ToString());
+    }
+
+    [Fact]
+    public void AuthorNameImplicitlyConvertsToString()
+    {
+        var author = new AuthorName("George Orwell");
+
+        string value = author;
+
+        Assert.Equal("George Orwell", value);
+    }
 }
