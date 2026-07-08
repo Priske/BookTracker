@@ -22,6 +22,9 @@ public class CreateMemberCommandHandler(IMemberRepository memberRepository) : IH
                 Id = savedMember.Id,
                 Name = savedMember.Name,
                 Email = savedMember.Email,
+
             };
     }
+
+
 }
