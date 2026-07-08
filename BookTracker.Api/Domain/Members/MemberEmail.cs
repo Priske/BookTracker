@@ -26,9 +26,9 @@ public sealed record MemberEmail
         Value = cleaned;
     }
 
-    public static implicit operator string(MemberEmail member)
+    public static implicit operator string(MemberEmail email)
     {
-        return member.Value;
+        return email.Value;
     }
 
     public override string ToString()

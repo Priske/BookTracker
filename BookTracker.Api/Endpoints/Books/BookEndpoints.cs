@@ -20,7 +20,7 @@ public static class BookEndpoints
     }
 
     public static async Task<IResult> GetBookSummaries(
-        [AsParameters] GetBookListRequest request,
+        [AsParameters] GetBookSummariesRequest request,
         GetBookSummariesQueryHandler query)
     {
         var books = await query.Execute(request);
@@ -57,26 +57,40 @@ public static class BookEndpoints
          UpdateBookRequest request,
          UpdateBookCommandHandler handler)
     {
-        var updated = await handler.Execute(id, request);
-
-        if (!updated)
+        try
         {
-            return Results.NotFound();
-        }
+            var updated = await handler.Execute(id, request);
 
-        return Results.NoContent();
+            if (!updated)
+            {
+                return Results.NotFound();
+            }
+            return Results.NoContent();
+        }
+        catch (DomainException exception)
+        {
+            return Results.BadRequest(new { error = exception.Message });
+        }
     }
 
     public static async Task<IResult> DeleteBook(int id, DeleteBookCommandHandler handler)
     {
-        var deleted = await handler.Execute(id);
-
-        if (!deleted)
+        try
         {
-            return Results.NotFound();
+            var deleted = await handler.Execute(id);
+
+            if (!deleted)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.NoContent();
+        }
+        catch (DomainException exception)
+        {
+            return Results.BadRequest(new { error = exception.Message });
         }
 
-        return Results.NoContent();
     }
 
 }

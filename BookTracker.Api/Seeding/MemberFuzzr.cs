@@ -1,11 +1,11 @@
-using BookTracker.Api.Domain.Books;
+using BookTracker.Api.Domain.Members;
 using QuickFuzzr;
 
 namespace BookTracker.Api.Seeding;
 
-public static class BookFuzzr
+public static class MemberFuzzr
 {
-    public static IEnumerable<Book> Many(int count)
+    public static IEnumerable<Member> Many(int count)
         => One.Many(count).Generate();
 
     private static readonly string[] Adjectives =
@@ -36,20 +36,6 @@ public static class BookFuzzr
         "Octopus"
     ];
 
-    private static readonly string[] Situations =
-    [
-        "Who Knew Too Much",
-        "At the End of Time",
-        "With a Suspicious Hat",
-        "In Production",
-        "Under the Stairs",
-        "Against Better Judgement",
-        "During Standup",
-        "With No Unit Tests",
-        "On a Tuesday",
-        "After the Refactor"
-    ];
-
     private static readonly string[] FirstNames =
     [
         "Ada",
@@ -78,38 +64,33 @@ public static class BookFuzzr
         "Async"
     ];
 
-    private static readonly FuzzrOf<string> Situational =
+    private static readonly FuzzrOf<string> Gmail =
         from adjective in Fuzzr.OneOf(Adjectives)
         from noun in Fuzzr.OneOf(Nouns)
-        from situation in Fuzzr.OneOf(Situations)
-        select $"The {adjective} {noun} {situation}";
+        select $"{adjective}{noun}@Gmail.com";
 
-    private static readonly FuzzrOf<string> Memoir =
+    private static readonly FuzzrOf<string> Hotmail =
         from adjective in Fuzzr.OneOf(Adjectives)
         from noun in Fuzzr.OneOf(Nouns)
-        select $"My Life as an {adjective} {noun}";
+        select $"My Life as an {adjective} {noun}@Hotmail.com";
 
-    private static readonly FuzzrOf<string> Academic =
-        from adjective in Fuzzr.OneOf(Adjectives)
-        from noun in Fuzzr.OneOf(Nouns)
-        select $"A Brief History of {adjective} {noun}s";
 
-    private static readonly FuzzrOf<string> Title =
-        Fuzzr.OneOf(Situational, Memoir, Academic);
 
-    private static readonly FuzzrOf<string> Author =
+    private static readonly FuzzrOf<string> Email =
+        Fuzzr.OneOf(Gmail, Hotmail);
+
+    private static readonly FuzzrOf<string> Name =
         from firstName in Fuzzr.OneOf(FirstNames)
         from lastName in Fuzzr.OneOf(LastNames)
         select $"{firstName} {lastName}";
 
-    private static readonly FuzzrOf<Book> One =
-        from title in Title
-        from author in Author
+    private static readonly FuzzrOf<Member> One =
+        from name in Name
+        from email in Email
         from year in Fuzzr.Int(1930, 2026)
-        select new Book
+        select new Member
         {
-            Title = new BookTitle(title),
-            Author = new AuthorName(author),
-            Year = year
+            Name = new MemberName(name),
+            Email = new MemberEmail(email),
         };
 }

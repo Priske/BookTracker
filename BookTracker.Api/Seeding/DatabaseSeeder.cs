@@ -17,4 +17,20 @@ public static class DatabaseSeeder
 
         dbContext.SaveChanges();
     }
+
+
+
+    public static void SeedMembers(AppDbContext dbContext, int count = 50)
+    {
+        if (dbContext.Books.Any())
+        {
+            return;
+        }
+
+        var books = BookFuzzr.Many(count);
+
+        dbContext.Books.AddRange(books);
+
+        dbContext.SaveChanges();
+    }
 }

@@ -28,6 +28,7 @@ public sealed record BookTitle
         return title.Value;
     }
 
+
     public override string ToString()
     {
         return Value;

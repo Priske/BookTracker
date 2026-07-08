@@ -62,3 +62,16 @@ GET http://localhost:5234/books?search=History
 
 ### Search Books With Paging
 GET http://localhost:5234/books?search=History&page=1&pageSize=5
+
+
+
+
+
+### Create Member
+POST http://localhost:5234/members
+Content-Type: application/json
+
+{
+  "name": "Dune",
+  "email": "Frank@Herbert"
+}

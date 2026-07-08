@@ -1,0 +1,53 @@
+using BookTracker.Api.Domain.Members;
+using BookTracker.Api.Domain;
+namespace BookTracker.Api.Tests.IntegrationTests.Members.Domain;
+
+public class MemberEmailTests
+{
+    [Fact]
+    public void MemberNamecceptsValidName()
+    {
+        var email = new MemberEmail("ScottFitzgerald@email.com");
+
+        Assert.Equal("ScottFitzgerald@email.com", email.Value);
+    }
+
+    [Fact]
+    public void MemberEmailTrimsValue()
+    {
+        var email = new MemberEmail("   Test@email.com");
+        Assert.Equal("Test@email.com", email.Value);
+    }
+
+    [Fact]
+    public void MemberEmailRejectsWhitespace()
+    {
+        var exception = Assert.Throws<DomainException>(() => new MemberEmail("   "));
+        Assert.Equal("Email is required.", exception.Message);
+    }
+
+    [Fact]
+    public void MemberEmailRejectsNameLongerThan200Characters()
+    {
+        var exception = Assert.Throws<DomainException>(() => new MemberEmail(
+            "efmuqsqnxtbfadqrkewdnefmksjagaplixrulfeywivafhyocycsgxaqyeedwegwgdcn@jrfqzsydnpwbpjuozmsbvsrsqfkzmtmonefmuqsqnxtbfadqrkewdnefmksjagaplixrulfeywivafhyocycsgxaqyeedwegwgdcn@jrfqzsydnpwbpjuozmsbvsrsqfkzmtmon"));
+        Assert.Equal("Email cannot be longer than 200 characters.", exception.Message);
+
+    }
+
+    [Fact]
+    public void MemberEmailRejectsNullInput()
+    {
+        var exception = Assert.Throws<DomainException>(() => new MemberEmail(null));
+        Assert.Equal("Email is required.", exception.Message);
+    }
+
+    [Fact]
+    public void MemberEmailRejectInputNotInMailFormat()
+    {
+        var exception = Assert.Throws<DomainException
+        >(() => new MemberEmail("Testemail.com"));
+        Assert.Equal("Email must contain the @ symbol", exception.Message);
+    }
+
+}

@@ -2,12 +2,13 @@ using BookTracker.Api.Application;
 using BookTracker.Api.Storage.Books;
 using BookTracker.Api.Storage;
 using Microsoft.EntityFrameworkCore;
+using BookTracker.Api.Storage.Members;
 
 namespace BookTracker.Api.Wiring;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static WebApplicationBuilder AddBookTracker(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddBookTrackerServices(this WebApplicationBuilder builder)
     {
         RegisterStorage(builder);
         RegisterHandlers(builder.Services);
@@ -15,12 +16,15 @@ public static class WebApplicationBuilderExtensions
         return builder;
     }
 
+
+
     private static void RegisterStorage(WebApplicationBuilder builder)
     {
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("BookTracker")));
 
         builder.Services.AddScoped<IBookRepository, EfBookRepository>();
+        builder.Services.AddScoped<IMemberRepository, EfMemberRepository>();
     }
 
     private static void RegisterHandlers(IServiceCollection services)
