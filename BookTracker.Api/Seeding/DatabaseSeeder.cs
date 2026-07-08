@@ -22,14 +22,14 @@ public static class DatabaseSeeder
 
     public static void SeedMembers(AppDbContext dbContext, int count = 50)
     {
-        if (dbContext.Books.Any())
+        if (dbContext.Members.Any())
         {
             return;
         }
 
-        var books = BookFuzzr.Many(count);
+        var members = MemberFuzzr.Many(count);
 
-        dbContext.Books.AddRange(books);
+        dbContext.Members.AddRange(members);
 
         dbContext.SaveChanges();
     }

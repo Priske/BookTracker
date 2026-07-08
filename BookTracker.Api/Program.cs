@@ -1,7 +1,7 @@
 using BookTracker.Api.Wiring;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddBookTrackerServices();
+builder.AddApplicationServices();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -15,7 +15,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 app.UseBookTracker();
-app.UseMemberTracker();
 app.UseCors();
 app.Run();
 

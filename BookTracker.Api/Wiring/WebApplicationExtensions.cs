@@ -20,32 +20,14 @@ public static class WebApplicationExtensions
             if (app.Configuration.GetValue<bool>("SeedDatabase"))
             {
                 DatabaseSeeder.SeedBooks(dbContext, 500);
-            }
-        }
-
-        app.MapBookEndpoints();
-
-        return app;
-    }
-
-    public static WebApplication UseMemberTracker(this WebApplication app)
-    {
-        if (app.Environment.IsDevelopment())
-        {
-            using var scope = app.Services.CreateScope();
-
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            dbContext.Database.EnsureCreated();
-
-            if (app.Configuration.GetValue<bool>("SeedDatabase"))
-            {
                 DatabaseSeeder.SeedMembers(dbContext, 500);
             }
         }
 
+        app.MapBookEndpoints();
         app.MapMemberEndpoints();
 
         return app;
     }
+
 }

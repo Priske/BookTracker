@@ -81,6 +81,8 @@ Content-Type: application/json
 ### Get Member Details
 GET http://localhost:5234/members/1
 
+### Get Member Details
+GET http://localhost:5234/members
 ### Update Member
 PUT http://localhost:5234/members/1
 Content-Type: application/json

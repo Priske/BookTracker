@@ -8,7 +8,7 @@ namespace BookTracker.Api.Wiring;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static WebApplicationBuilder AddBookTrackerServices(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
     {
         RegisterStorage(builder);
         RegisterHandlers(builder.Services);

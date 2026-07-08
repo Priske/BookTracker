@@ -87,7 +87,6 @@ public static class MemberFuzzr
     private static readonly FuzzrOf<Member> One =
         from name in Name
         from email in Email
-        from year in Fuzzr.Int(1930, 2026)
         select new Member
         {
             Name = new MemberName(name),

@@ -194,7 +194,7 @@ public class GetMemberSummariesTests : IntegrationTest
                     Email = new MemberEmail("george.orwell@email.com")
                 });
             });
-        var response = await Client.GetAsync("/books?search=Commits&page=2&pageSize=1");
+        var response = await Client.GetAsync("/members?search=Commits&page=2&pageSize=1");
 
         var result = await response.ReadJsonAs<GetMemberSummariesResponse>(HttpStatusCode.OK);
 
