@@ -102,6 +102,6 @@ Content-Type: application/json
 
 {
   "name": "Ada Lovelace",
-  "email": "ada@example.com",
-  "password": "analytical-engine"
+  "email": "ada2@example.com",
+  "password": "analytical-engine2"
 }

@@ -19,7 +19,6 @@ public static class WebApplicationBuilderExtensions
     }
 
 
-
     private static void RegisterStorage(WebApplicationBuilder builder)
     {
         builder.Services.AddDbContext<AppDbContext>(options =>

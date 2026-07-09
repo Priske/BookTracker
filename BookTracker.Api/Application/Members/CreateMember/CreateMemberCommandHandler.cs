@@ -39,7 +39,6 @@ public class CreateMemberCommandHandler(
         member.PasswordHash = passwordHasher.HashPassword(member, request.Password);
 
         var savedMember = await memberRepository.AddAsync(member);
-
         return
             new CreateMemberResponse
             {
