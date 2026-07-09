@@ -56,4 +56,40 @@ public class UpdateMemberTests : IntegrationTest
         await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+    [Fact]
+
+    public async Task PutMemberRejectsUpdatedMemberWithExistingEmail()
+    {
+        Writer.Seed(db =>
+        {
+            db.Members.AddRange(
+                            new Member
+                            {
+                                Name = new MemberName("Karl"),
+                                Email = new MemberEmail("karl@marx.de"),
+                                PasswordHash = ""
+                            },
+                            new Member
+                            {
+                                Name = new MemberName("Fried"),
+                                Email = new MemberEmail("friedrich@engels.de"),
+                                PasswordHash = ""
+                            }
+                            );
+        });
+
+        var request =
+            new UpdateMemberRequest
+            {
+                Name = "Friedrich",
+                Email = "friedrich@engels.de"
+            };
+
+        var response = await Client.PutAsJsonAsync("/members/1", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Conflict);
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
 }

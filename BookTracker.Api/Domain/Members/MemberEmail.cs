@@ -23,7 +23,7 @@ public sealed record MemberEmail
             throw new DomainException($"Email cannot be longer than {MaxLength} characters.");
         }
 
-        Value = cleaned;
+        Value = NormalizeEmail(cleaned);
     }
 
     public static implicit operator string(MemberEmail email)
@@ -34,5 +34,9 @@ public sealed record MemberEmail
     public override string ToString()
     {
         return Value;
+    }
+    private string NormalizeEmail(string email)
+    {
+        return email.Trim().ToLowerInvariant();
     }
 }

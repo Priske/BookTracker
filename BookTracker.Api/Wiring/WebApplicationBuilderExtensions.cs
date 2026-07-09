@@ -3,6 +3,8 @@ using BookTracker.Api.Storage.Books;
 using BookTracker.Api.Storage;
 using Microsoft.EntityFrameworkCore;
 using BookTracker.Api.Storage.Members;
+using BookTracker.Api.Domain.Members;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookTracker.Api.Wiring;
 
@@ -25,6 +27,7 @@ public static class WebApplicationBuilderExtensions
 
         builder.Services.AddScoped<IBookRepository, EfBookRepository>();
         builder.Services.AddScoped<IMemberRepository, EfMemberRepository>();
+        builder.Services.AddScoped<IPasswordHasher<Member>, PasswordHasher<Member>>();
     }
 
     private static void RegisterHandlers(IServiceCollection services)

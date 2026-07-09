@@ -33,13 +33,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
                 .HasConversion(
                     email => email.Value,
                     value => new MemberEmail(value))
-                .HasMaxLength(MemberEmail.MaxLength);
+                .HasMaxLength(MemberEmail.MaxLength)
+                .IsRequired();
+
+            member.HasIndex(m => m.Email)
+                .IsUnique();
 
             member.Property(m => m.Name)
                 .HasConversion(
-                    author => author.Value,
+                    name => name.Value,
                     value => new MemberName(value))
-                    .HasMaxLength(MemberName.MaxLength);
+                .HasMaxLength(MemberName.MaxLength)
+                .IsRequired();
         });
     }
 }

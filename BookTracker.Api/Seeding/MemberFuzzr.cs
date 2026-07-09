@@ -1,4 +1,5 @@
 using BookTracker.Api.Domain.Members;
+using Microsoft.AspNetCore.Identity;
 using QuickFuzzr;
 
 namespace BookTracker.Api.Seeding;
@@ -74,11 +75,16 @@ public static class MemberFuzzr
         from noun in Fuzzr.OneOf(Nouns)
         select $"My Life as an {adjective} {noun}@Hotmail.com";
 
-
+    private static readonly FuzzrOf<string> Pswrds =
+           from adjective in Fuzzr.OneOf(Adjectives)
+           from noun in Fuzzr.OneOf(Nouns)
+           select $"{adjective}{noun}";
 
     private static readonly FuzzrOf<string> Email =
         Fuzzr.OneOf(Gmail, Hotmail);
 
+    private static readonly FuzzrOf<string> Password =
+        Fuzzr.OneOf(Pswrds);
     private static readonly FuzzrOf<string> Name =
         from firstName in Fuzzr.OneOf(FirstNames)
         from lastName in Fuzzr.OneOf(LastNames)
@@ -87,9 +93,14 @@ public static class MemberFuzzr
     private static readonly FuzzrOf<Member> One =
         from name in Name
         from email in Email
+        from password in Password
         select new Member
         {
             Name = new MemberName(name),
             Email = new MemberEmail(email),
+            PasswordHash = password
         };
+
+
 }
+

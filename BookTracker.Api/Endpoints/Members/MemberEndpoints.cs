@@ -4,6 +4,7 @@ using BookTracker.Api.Application.Members.GetMemberSummaries;
 using BookTracker.Api.Application.Members.UpdateMember;
 using BookTracker.Api.Application.Members.DeleteMember;
 using BookTracker.Api.Application.Members.GetMemberDetails;
+using BookTracker.Api.Application.Members;
 namespace BookTracker.Api.Endpoints.Members;
 
 
@@ -49,10 +50,15 @@ public static class MemberEndpoints
             var response = await handler.Execute(request);
             return Results.Created($"/members/{response.Id}", response);
         }
+        catch (MemberEmailAlreadyExistsException exception)
+        {
+            return Results.Conflict(new { error = exception.Message });
+        }
         catch (DomainException exception)
         {
             return Results.BadRequest(new { error = exception.Message });
         }
+
     }
     public static async Task<IResult> UpdateMember(int id,
          UpdateMemberRequest request,
@@ -67,6 +73,10 @@ public static class MemberEndpoints
                 return Results.NotFound();
             }
             return Results.NoContent();
+        }
+        catch (MemberEmailAlreadyExistsException exception)
+        {
+            return Results.Conflict(new { error = exception.Message });
         }
         catch (DomainException exception)
         {

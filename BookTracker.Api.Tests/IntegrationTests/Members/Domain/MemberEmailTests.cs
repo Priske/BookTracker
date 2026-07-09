@@ -9,14 +9,14 @@ public class MemberEmailTests
     {
         var email = new MemberEmail("ScottFitzgerald@email.com");
 
-        Assert.Equal("ScottFitzgerald@email.com", email.Value);
+        Assert.Equal("scottfitzgerald@email.com", email.Value);
     }
 
     [Fact]
     public void MemberEmailTrimsValue()
     {
         var email = new MemberEmail("   Test@email.com");
-        Assert.Equal("Test@email.com", email.Value);
+        Assert.Equal("test@email.com", email.Value);
     }
 
     [Fact]
@@ -65,5 +65,14 @@ public class MemberEmailTests
 
         Assert.Equal("test@email.com", value);
     }
+
+    [Fact]
+    public void MemberEmailNormalizesValue()
+    {
+        var email = new MemberEmail("  Ada@Example.com  ");
+
+        Assert.Equal("ada@example.com", email.Value);
+    }
+
 
 }

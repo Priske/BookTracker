@@ -20,7 +20,7 @@ public static class WebApplicationExtensions
             if (app.Configuration.GetValue<bool>("SeedDatabase"))
             {
                 DatabaseSeeder.SeedBooks(dbContext, 500);
-                DatabaseSeeder.SeedMembers(dbContext, 500);
+                // DatabaseSeeder.SeedMembers(dbContext, 500);
             }
         }
 

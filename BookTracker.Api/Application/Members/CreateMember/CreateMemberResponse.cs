@@ -7,4 +7,5 @@ public class CreateMemberResponse
     public required string Email { get; set; }
 
 
+
 }

@@ -29,7 +29,7 @@ public class GetMemberSummariesTests : IntegrationTest
         Assert.NotNull(result);
 
         var memberSummary = Assert.Single(result.Items);
-        Assert.Equal("John@Steinbeck", memberSummary.Email);
+        Assert.Equal("john@steinbeck", memberSummary.Email);
         Assert.Equal(1, result.Page);
         Assert.Equal(10, result.PageSize);
         Assert.Equal(1, result.TotalItems);
@@ -121,7 +121,7 @@ public class GetMemberSummariesTests : IntegrationTest
         var member = Assert.Single(result.Items);
 
         Assert.Equal("Karl", member.Name);
-        Assert.Equal("Karl@Marx.de", member.Email);
+        Assert.Equal("karl@marx.de", member.Email);
         Assert.Equal(1, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
@@ -152,7 +152,7 @@ public class GetMemberSummariesTests : IntegrationTest
         var member = Assert.Single(result.Items);
 
         Assert.Equal("Karl", member.Name);
-        Assert.Equal("Karl@Marx.de", member.Email);
+        Assert.Equal("karl@marx.de", member.Email);
         Assert.Equal(1, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
