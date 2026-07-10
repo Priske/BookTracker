@@ -11,15 +11,7 @@ public class UpdateMemberTests : IntegrationTest
     [Fact]
     public async Task PutMemberUpdatesMember()
     {
-        Writer.Seed(db =>
-        {
-            db.Members.Add(
-                            new Member
-                            {
-                                Name = new MemberName("Karl"),
-                                Email = new MemberEmail("karl@marx.de")
-                            });
-        });
+        var memberId = await AuthenticateAsMember();
 
         var request =
             new UpdateMemberRequest
@@ -28,7 +20,7 @@ public class UpdateMemberTests : IntegrationTest
                 Email = "friedrich@engels.de"
             };
 
-        var response = await Client.PutAsJsonAsync("/members/1", request);
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
 
         await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
@@ -42,7 +34,24 @@ public class UpdateMemberTests : IntegrationTest
     }
 
     [Fact]
-    public async Task PutMemberReturnsNotFoundWhenMemberDoesNotExist()
+    public async Task PutMemberReturnsForbiddenDeletingOtherId()
+    {
+        await AuthenticateAsMember();
+        var request =
+            new UpdateMemberRequest
+            {
+                Name = "Unknown Member",
+                Email = "Unknown@email",
+            };
+
+        var response = await Client.PutAsJsonAsync("/members/9999", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+    }
+
+    [Fact]
+    public async Task PutMemberReturnsUnautharizedDeleting()
     {
         var request =
             new UpdateMemberRequest
@@ -53,13 +62,17 @@ public class UpdateMemberTests : IntegrationTest
 
         var response = await Client.PutAsJsonAsync("/members/9999", request);
 
-        await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        await response.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+
     }
+
+
     [Fact]
 
     public async Task PutMemberRejectsUpdatedMemberWithExistingEmail()
     {
+        var memberId = await AuthenticateAsMember();
+
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -85,7 +98,7 @@ public class UpdateMemberTests : IntegrationTest
                 Email = "friedrich@engels.de"
             };
 
-        var response = await Client.PutAsJsonAsync("/members/1", request);
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
 
         await response.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 

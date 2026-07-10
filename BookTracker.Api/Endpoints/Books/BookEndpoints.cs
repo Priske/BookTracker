@@ -9,13 +9,21 @@ namespace BookTracker.Api.Endpoints.Books;
 
 public static class BookEndpoints
 {
-    public static IEndpointRouteBuilder MapBookEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapBookEndpoints(
+        this IEndpointRouteBuilder app)
     {
         app.MapGet("/books", GetBookSummaries);
         app.MapGet("/books/{id:int}", GetBookDetails);
-        app.MapPost("/books", CreateBook);
-        app.MapPut("/books/{id:int}", UpdateBook);
-        app.MapDelete("/books/{id:int}", DeleteBook);
+
+        app.MapPost("/books", CreateBook)
+            .RequireAuthorization();
+
+        app.MapPut("/books/{id:int}", UpdateBook)
+            .RequireAuthorization();
+
+        app.MapDelete("/books/{id:int}", DeleteBook)
+            .RequireAuthorization();
+
         return app;
     }
 
