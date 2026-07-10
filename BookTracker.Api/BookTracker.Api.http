@@ -105,3 +105,27 @@ Content-Type: application/json
   "email": "ada2@example.com",
   "password": "analytical-engine2"
 }
+
+
+### Create member
+POST http://localhost:5234/members
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "password": "analytical-engine"
+}
+
+### Login
+POST http://localhost:5234/auth/login
+Content-Type: application/json
+
+{
+  "email": "ada@example.com",
+  "password": "analytical-engine"
+}
+
+### Current member
+GET http://localhost:5234/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRhIExvdmVsYWNlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRhQGV4YW1wbGUuY29tIiwiZXhwIjoxNzgzNjc2OTMzLCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.KsB3tOoev-E9nyADQ-j9lQ2fulgeZCCeNGsNN66OJJ4

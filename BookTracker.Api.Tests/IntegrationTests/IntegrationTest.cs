@@ -1,3 +1,6 @@
+using BookTracker.Api.Domain.Members;
+using Microsoft.AspNetCore.Identity;
+
 namespace BookTracker.Api.Tests.IntegrationTests;
 
 public abstract class IntegrationTest : IDisposable
@@ -21,5 +24,23 @@ public abstract class IntegrationTest : IDisposable
     {
         Client.Dispose();
         factory.Dispose();
+    }
+
+    protected void SeedMember(
+      string password = "analytical-engine")
+    {
+        var member = new Member
+        {
+            Name = new MemberName("Ada Lovelace"),
+            Email = new MemberEmail("ada@example.com"),
+            PasswordHash = string.Empty
+        };
+
+        var passwordHasher = new PasswordHasher<Member>();
+
+        member.PasswordHash =
+            passwordHasher.HashPassword(member, password);
+
+        Writer.Seed(db => db.Members.Add(member));
     }
 }
