@@ -4,6 +4,7 @@ using BookTracker.Api.Application.Books.DeleteBook;
 using BookTracker.Api.Application.Books.GetBookDetails;
 using BookTracker.Api.Application.Books.UpdateBook;
 using BookTracker.Api.Domain;
+using BookTracker.Api.Security;
 
 namespace BookTracker.Api.Endpoints.Books;
 
@@ -16,13 +17,16 @@ public static class BookEndpoints
         app.MapGet("/books/{id:int}", GetBookDetails);
 
         app.MapPost("/books", CreateBook)
-            .RequireAuthorization();
+            .RequireAuthorization(
+                AuthorizationPolicies.ManageBooks);
 
         app.MapPut("/books/{id:int}", UpdateBook)
-            .RequireAuthorization();
+            .RequireAuthorization(
+                AuthorizationPolicies.ManageBooks);
 
         app.MapDelete("/books/{id:int}", DeleteBook)
-            .RequireAuthorization();
+            .RequireAuthorization(
+                AuthorizationPolicies.ManageBooks);
 
         return app;
     }

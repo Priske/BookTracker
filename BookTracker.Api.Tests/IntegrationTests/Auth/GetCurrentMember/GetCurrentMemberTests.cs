@@ -3,13 +3,12 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Auth.GetCurrentMember;
 using BookTracker.Api.Application.Auth.Login;
+using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Auth.GetCurrentMember;
 
 public class GetCurrentMemberTests : IntegrationTest
 {
-
-
     [Fact]
     public async Task GetCurrentMemberRequiresAuthentication()
     {
@@ -17,6 +16,24 @@ public class GetCurrentMemberTests : IntegrationTest
 
         await response.ShouldHaveStatusCode(
             HttpStatusCode.Unauthorized);
+    }
+    [Fact]
+    public async Task GetCurrentMemberReturnsRole()
+    {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
+        var response =
+            await Client.GetAsync("/auth/me");
+
+        var member =
+            await response
+                .ReadJsonAs<CurrentMemberResponse>(
+                    HttpStatusCode.OK);
+
+        Assert.Equal(
+            "Administrator",
+            member.Role);
     }
     [Fact]
     public async Task GetCurrentMemberReturnsTokenClaims()

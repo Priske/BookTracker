@@ -23,8 +23,8 @@ public class CreateMemberCommandHandler(
             new Member
             {
                 Name = new MemberName(request.Name),
-                Email = mail
-
+                Email = mail,
+                Role = MemberRole.Member
             };
         //Whitespace still legal???
         if (string.IsNullOrWhiteSpace(request.Password))

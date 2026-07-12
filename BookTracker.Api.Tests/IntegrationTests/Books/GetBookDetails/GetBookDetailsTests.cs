@@ -1,6 +1,7 @@
 using System.Net;
 using BookTracker.Api.Application.Books.GetBookDetails;
 using BookTracker.Api.Domain.Books;
+using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Books.GetBookDetails;
 
@@ -34,6 +35,7 @@ public class GetBookDetails : IntegrationTest
     [Fact]
     public async Task GetBookDetailsReturnsNotFoundWhenBookDoesNotExist()
     {
+        await AuthenticateAsMember(MemberRole.Administrator);
         var response = await Client.GetAsync("/books/9999");
         await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
     }

@@ -45,6 +45,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
                     value => new MemberName(value))
                 .HasMaxLength(MemberName.MaxLength)
                 .IsRequired();
+
+            member.Property(current => current.Role)
+                .HasConversion<string>()
+                .HasMaxLength(50);
         });
     }
 }

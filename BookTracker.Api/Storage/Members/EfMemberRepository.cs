@@ -31,8 +31,8 @@ public class EfMemberRepository(AppDbContext dbContext) : IMemberRepository
         var all = await dbContext.Members.ToListAsync();
 
         return all.Any(m =>
-            m.Email.Value == email.Value &&
-            (!memberIdToIgnore.HasValue || m.Id != memberIdToIgnore.Value));
+            m.Email == email &&
+            (!memberIdToIgnore.HasValue || m.Id != memberIdToIgnore));
     }
 
     public async Task<bool> UpdateAsync(Member member)

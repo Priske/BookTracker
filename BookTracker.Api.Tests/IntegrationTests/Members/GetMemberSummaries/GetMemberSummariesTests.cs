@@ -12,33 +12,36 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesBooks()
     {
-
+        await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db => db.Members.Add(
                 new Member
                 {
                     Name = new MemberName("Cannery Row"),
-                    Email = new MemberEmail("John@Steinbeck")
+                    Email = new MemberEmail("John@Steinbeck"),
+                    PasswordHash = ""
                 }
             ));
 
 
         var response = await Client.GetAsync("/members");
         var result = await response.ReadJsonAs<GetMemberSummariesResponse>(HttpStatusCode.OK);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         Assert.NotNull(result);
 
-        var memberSummary = Assert.Single(result.Items);
+        var memberSummary = Assert.Single(
+                result.Items,
+                member => member.Email == "john@steinbeck");
         Assert.Equal("john@steinbeck", memberSummary.Email);
         Assert.Equal(1, result.Page);
         Assert.Equal(10, result.PageSize);
-        Assert.Equal(1, result.TotalItems);
+        Assert.Equal(2, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
 
     [Fact]
     public async Task GetMemberSummariesReturnsRequestedPage()
     {
+        await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -66,16 +69,18 @@ public class GetMemberSummariesTests : IntegrationTest
 
         var member = Assert.Single(result.Items);
 
-        Assert.Equal("Jefke 2", member.Name);
+        Assert.Equal("Jefke", result.Items[0].Name);
         Assert.Equal(2, result.Page);
         Assert.Equal(1, result.PageSize);
-        Assert.Equal(3, result.TotalItems);
-        Assert.Equal(3, result.TotalPages);
+        Assert.Equal(4, result.TotalItems);
+        Assert.Equal(4, result.TotalPages);
     }
 
     [Fact]
     public async Task GetMemberSummariesReturnsEmptyItemsWhenPageIsTooHigh()
     {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
         Writer.Seed(db =>
         {
             db.Members.Add(
@@ -92,13 +97,14 @@ public class GetMemberSummariesTests : IntegrationTest
         Assert.Empty(result.Items);
         Assert.Equal(99, result.Page);
         Assert.Equal(10, result.PageSize);
-        Assert.Equal(1, result.TotalItems);
+        Assert.Equal(2, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
 
     [Fact]
     public async Task GetMemberSummariesCanSearchByEmail()
     {
+        await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -130,6 +136,7 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesCanSearchByName()
     {
+        await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -161,6 +168,7 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesAppliesPagingAfterSearch()
     {
+        await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -202,6 +210,7 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesSearchForNoResuls()
     {
+        await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db =>
             {
                 db.Members.AddRange(

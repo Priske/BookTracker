@@ -25,7 +25,10 @@ public class JwtTokenGenerator(JwtSettings settings)
                     member.Name.Value),
                 new(
                     ClaimTypes.Email,
-                    member.Email.Value)
+                    member.Email.Value),
+                new(
+                    ClaimTypes.Role,
+                    member.Role.ToString())
             };
 
         var signingKey =

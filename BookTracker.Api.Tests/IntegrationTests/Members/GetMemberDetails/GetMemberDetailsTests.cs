@@ -9,6 +9,8 @@ public class GetMemberDetails : IntegrationTest
     [Fact]
     public async Task GetMemberDetailsReturnsBook()
     {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
         Writer.Seed(db =>
         {
             db.Members.Add(
@@ -19,12 +21,12 @@ public class GetMemberDetails : IntegrationTest
                 });
         });
 
-        var response = await Client.GetAsync("/members/1");
+        var response = await Client.GetAsync("/members/2");
         var member = await response.ReadJsonAs<GetMemberDetailsResponse>(HttpStatusCode.OK);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(member);
-        Assert.Equal(1, member.Id);
+        Assert.Equal(2, member.Id);
         Assert.Equal("Dune", member.Name);
         Assert.Equal("frank@herbert", member.Email);
     }
@@ -32,6 +34,8 @@ public class GetMemberDetails : IntegrationTest
     [Fact]
     public async Task GetMemberDetailsReturnsNotFoundWhenMemberDoesNotExist()
     {
+        await AuthenticateAsMember(
+             MemberRole.Administrator);
         var response = await Client.GetAsync("/members/9999");
         await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
     }
