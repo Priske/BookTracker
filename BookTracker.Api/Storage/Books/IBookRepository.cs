@@ -6,5 +6,5 @@ public interface IBookRepository
 {
     Task<Book> AddAsync(Book book);
     Task<bool> DeleteAsync(int id);
-    Task<bool> UpdateAsync(Book book);
+    Task<UpdateBookResult> UpdateAsync(Book book, Guid expectedVersion);
 }

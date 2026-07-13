@@ -25,6 +25,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
                     author => author.Value,
                     value => new AuthorName(value))
                     .HasMaxLength(AuthorName.MaxLength);
+
+            book.Property(book => book.Version)
+                .IsConcurrencyToken();
         });
 
         modelBuilder.Entity<Member>(member =>

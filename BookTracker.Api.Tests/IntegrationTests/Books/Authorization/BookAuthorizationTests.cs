@@ -159,12 +159,19 @@ public class BookAuthorizationTests : IntegrationTest
         await createResponse.ShouldHaveStatusCode(
             HttpStatusCode.Created);
 
+        var version = Reader.Query(db =>
+                                db.Books
+                                    .Where(book => book.Id == 1)
+                                    .Select(book => book.Version)
+                                    .Single());
+
         var updateRequest =
             new UpdateBookRequest
             {
                 Title = "Dune",
                 Author = "Frank Herbert",
-                Year = 1966
+                Year = 1966,
+                Version = version
             };
 
         var updateResponse =
