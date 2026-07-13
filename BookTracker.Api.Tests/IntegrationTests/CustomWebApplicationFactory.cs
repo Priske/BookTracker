@@ -11,17 +11,17 @@ namespace BookTracker.Api.Tests.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private SqliteConnection connection = null!;
+    private SqliteConnection? connection;
     private static readonly KeyValuePair<string, string?>[]
         TestSettings =
         [
             new("SeedDatabase", "false"),
-        new("Jwt:Issuer", "BookTracker.Tests"),
-        new("Jwt:Audience", "BookTracker.Tests"),
-        new(
-            "Jwt:SigningKey",
-            "book-tracker-test-signing-key-with-32-characters"),
-        new("Jwt:ExpirationMinutes", "10")
+            new("Jwt:Issuer", "BookTracker.Tests"),
+            new("Jwt:Audience", "BookTracker.Tests"),
+            new(
+                "Jwt:SigningKey",
+                "book-tracker-test-signing-key-with-32-characters"),
+            new("Jwt:ExpirationMinutes", "10")
         ];
 
     protected override IHost CreateHost(
@@ -71,8 +71,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void Dispose(bool disposing)
     {
+        if (disposing)
+        {
+            connection?.Dispose();
+        }
+
         base.Dispose(disposing);
-        connection.Dispose();
     }
 
     public EfReader GetReader() => new(Services);
