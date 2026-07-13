@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Books.CreateBook;
+using BookTracker.Api.Domain;
 using BookTracker.Api.Domain.Books;
 using BookTracker.Api.Domain.Members;
 
@@ -36,5 +37,34 @@ public class CreateBookTests : IntegrationTest
         Assert.Equal("The Heart Is a Lonely Hunter", book.Title.Value);
         Assert.Equal("Carson McCullers", book.Author.Value);
         Assert.Equal(1940, book.Year);
+    }
+
+    [Fact]
+    public async Task PostBookAsAnonymousRejects()
+    {
+        var request =
+            new CreateBookRequest
+            {
+                Title = "The Heart Is a Lonely Hunter",
+                Author = "Carson McCullers",
+                Year = 1940
+            };
+        var response = await Client.PostAsJsonAsync("/books", request);
+        await response.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task PostBookAsMemberRejects()
+    {
+        await AuthenticateAsMember(MemberRole.Member);
+        var request =
+            new CreateBookRequest
+            {
+                Title = "The Heart Is a Lonely Hunter",
+                Author = "Carson McCullers",
+                Year = 1940
+            };
+        var response = await Client.PostAsJsonAsync("/books", request);
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
     }
 }

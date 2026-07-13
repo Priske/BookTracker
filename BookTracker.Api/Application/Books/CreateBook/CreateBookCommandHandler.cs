@@ -1,21 +1,30 @@
 using BookTracker.Api.Domain.Books;
 using BookTracker.Api.Storage.Books;
+using BookTracker.Api.Domain.Actors;
 
 namespace BookTracker.Api.Application.Books.CreateBook;
 
 public class CreateBookCommandHandler(IBookRepository bookRepository) : IHandler
 {
-    public async Task<CreateBookResponse> Execute(CreateBookRequest request)
+    public async Task<CreateBookResponse> Execute(
+     Actor actor,
+     CreateBookRequest request)
     {
+        BookPermissions.EnsureCanManage(actor);
+
         var book =
             new Book
             {
-                Title = new BookTitle(request.Title),
-                Author = new AuthorName(request.Author),
-                Year = request.Year
+                Title =
+                    new BookTitle(request.Title),
+                Author =
+                    new AuthorName(request.Author),
+                Year =
+                    request.Year
             };
 
-        var savedBook = await bookRepository.AddAsync(book);
+        var savedBook =
+            await bookRepository.AddAsync(book);
 
         return
             new CreateBookResponse
@@ -26,4 +35,5 @@ public class CreateBookCommandHandler(IBookRepository bookRepository) : IHandler
                 Year = savedBook.Year
             };
     }
+
 }

@@ -8,6 +8,7 @@ namespace BookTracker.Api.Tests.IntegrationTests.Members.UpdateMember;
 public class UpdateMemberTests : IntegrationTest
 
 {
+
     [Fact]
     public async Task PutMemberUpdatesMember()
     {
@@ -34,7 +35,7 @@ public class UpdateMemberTests : IntegrationTest
     }
 
     [Fact]
-    public async Task PutMemberReturnsForbiddenDeletingOtherId()
+    public async Task PutMemberReturnsForbiddenUpdatingOtherId()
     {
         await AuthenticateAsMember();
         var request =

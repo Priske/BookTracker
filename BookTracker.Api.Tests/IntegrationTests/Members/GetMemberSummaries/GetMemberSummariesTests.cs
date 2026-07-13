@@ -10,7 +10,7 @@ public class GetMemberSummariesTests : IntegrationTest
 {
 
     [Fact]
-    public async Task GetMemberSummariesBooks()
+    public async Task GetMemberSummaries()
     {
         await AuthenticateAsMember(MemberRole.Administrator);
         Writer.Seed(db => db.Members.Add(
@@ -36,6 +36,24 @@ public class GetMemberSummariesTests : IntegrationTest
         Assert.Equal(10, result.PageSize);
         Assert.Equal(2, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
+    }
+
+    [Fact]
+    public async Task GetMemberSummariesRejectsAsMembers()
+    {
+        await AuthenticateAsMember(MemberRole.Member);
+        Writer.Seed(db => db.Members.Add(
+                new Member
+                {
+                    Name = new MemberName("Cannery Row"),
+                    Email = new MemberEmail("John@Steinbeck"),
+                    PasswordHash = ""
+                }
+            ));
+
+        var response = await Client.GetAsync("/members");
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
     }
 
     [Fact]
@@ -247,3 +265,4 @@ public class GetMemberSummariesTests : IntegrationTest
         Assert.Equal(0, result.TotalPages);
     }
 }
+
