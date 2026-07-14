@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+import { EditBookLink } from "./EditBookLink";
 import { ApiError } from "../api";
 import { getBook } from "./booksApi";
 
@@ -68,6 +69,7 @@ export function BookDetailsPage() {
       <h1>{book.title}</h1>
       <p>Author: {book.author}</p>
       <p>Year: {book.year}</p>
+      <EditBookLink bookId={book.id} />
     </main>
   );
 }
