@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { EditBookLink } from "./EditBookLink";
 import { ApiError } from "../api";
 import { getBook } from "./booksApi";
+import { DeleteBookButton } from "./DeleteBookButton";
 
 function readBookId(value: string | undefined) {
   const bookId = Number(value);
@@ -70,6 +71,7 @@ export function BookDetailsPage() {
       <p>Author: {book.author}</p>
       <p>Year: {book.year}</p>
       <EditBookLink bookId={book.id} />
+      <DeleteBookButton bookId={book.id} title={book.title} />
     </main>
   );
 }

@@ -41,3 +41,9 @@ export function createBook(request: CreateBookRequest) {
     body: JSON.stringify(request),
   });
 }
+
+export function deleteBook(bookId: number) {
+  return apiRequestWithoutResponse(`/books/${bookId}`, {
+    method: "DELETE",
+  });
+}
