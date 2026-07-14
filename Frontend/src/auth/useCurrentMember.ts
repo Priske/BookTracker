@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "../api";
 import { getCurrentMember } from "./authApi";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./useAuth";
 
 export function useCurrentMember() {
   const { accessToken, logout } = useAuth();

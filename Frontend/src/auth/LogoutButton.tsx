@@ -1,7 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./useAuth";
 
 export function LogoutButton() {
   const { logout } = useAuth();

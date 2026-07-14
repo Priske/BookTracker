@@ -3,8 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ApiError } from "../api";
 import { login } from "./authApi";
-import { setAccessToken } from "./tokenStorage";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./useAuth";
 
 
 type LoginLocationState = {

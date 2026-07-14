@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { LogoutButton } from "./auth/LogoutButton";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "./auth/useAuth";
 import { useCurrentMember } from "./auth/useCurrentMember";
 
 export function Navigation() {
