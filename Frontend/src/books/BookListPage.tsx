@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { CreateBookLink } from "./CreateBookLink";
 import { getBooks } from "./booksApi";
 
 
@@ -60,7 +61,7 @@ export function BookListPage() {
   return (
     <main>
       <h1>Books</h1>
-
+      <CreateBookLink />
       <form key={search} onSubmit={handleSearch}>
         <label>
           Search by title or author
