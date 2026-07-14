@@ -1,24 +1,40 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ApiError } from "../api";
 import { login } from "./authApi";
 import { setAccessToken } from "./tokenStorage";
+import { useAuth } from "./AuthContext";
+
+
+type LoginLocationState = {
+  registered?: boolean;
+  email?: string;
+};
 
 export function LoginPage() {
-  const [email, setEmail] = useState("");
+    const location = useLocation();
+  const locationState = location.state as LoginLocationState | null;
+  const [email, setEmail] = useState(locationState?.email ?? "");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const loginMutation = useMutation({
-    mutationFn: login,
-    onSuccess: async (response) => {
-      setAccessToken(response.accessToken);
-      await queryClient.invalidateQueries({ queryKey: ["current-member"] });
-      navigate("/account");
-    },
-  });
+const { loginWithToken } = useAuth();
+
+const loginMutation = useMutation({
+  mutationFn: login,
+
+  onSuccess: async (response) => {
+    loginWithToken(response.accessToken);
+
+    await queryClient.invalidateQueries({
+      queryKey: ["current-member"],
+    });
+
+    navigate("/account");
+  },
+});
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,6 +46,7 @@ export function LoginPage() {
 
   return (
     <main>
+      {locationState?.registered && <p>Your account was created. You can now log in.</p>}
       <h1>Log in</h1>
 
       <form onSubmit={handleSubmit}>

@@ -1,16 +1,26 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { removeAccessToken } from "./tokenStorage";
+
+import { useAuth } from "./AuthContext";
 
 export function LogoutButton() {
+  const { logout } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  function logout() {
-    removeAccessToken();
-    queryClient.removeQueries({ queryKey: ["current-member"] });
+function handleLogout() {
+    logout();
+
+    queryClient.removeQueries({
+      queryKey: ["current-member"],
+    });
+
     navigate("/login");
   }
 
-  return <button onClick={logout}>Log out</button>;
+  return (
+    <button type="button" onClick={handleLogout}>
+      Log out
+    </button>
+  );
 }

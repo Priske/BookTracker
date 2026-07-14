@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "../api";
 import { getCurrentMember } from "./authApi";
-import { getAccessToken, removeAccessToken } from "./tokenStorage";
+import { useAuth } from "./AuthContext";
 
 export function useCurrentMember() {
+  const { accessToken, logout } = useAuth();
+
   const query = useQuery({
     queryKey: ["current-member"],
     queryFn: getCurrentMember,
-    enabled: getAccessToken() !== null,
+    enabled: accessToken !== null,
     retry: false,
   });
 
@@ -17,9 +19,9 @@ export function useCurrentMember() {
 
   useEffect(() => {
     if (unauthorized) {
-      removeAccessToken();
+      logout();
     }
-  }, [unauthorized]);
+  }, [unauthorized, logout]);
 
   return query;
 }
