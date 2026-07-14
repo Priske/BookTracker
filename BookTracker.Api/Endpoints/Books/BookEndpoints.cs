@@ -4,7 +4,6 @@ using BookTracker.Api.Application.Books.DeleteBook;
 using BookTracker.Api.Application.Books.GetBookDetails;
 using BookTracker.Api.Application.Books.UpdateBook;
 using BookTracker.Api.Domain;
-using BookTracker.Api.Security;
 using System.Security.Claims;
 using BookTracker.Api.Storage.Books;
 

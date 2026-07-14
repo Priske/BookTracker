@@ -1,9 +1,6 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
 import { ApiError } from "../api";
-import { getCurrentMember } from "./authApi";
-import { getAccessToken, removeAccessToken } from "./tokenStorage";
+import { getAccessToken } from "./tokenStorage";
 import { useCurrentMember } from "./useCurrentMember";
 
 export function AccountPage() {
