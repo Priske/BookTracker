@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "../api";
 import { getCurrentMember } from "./authApi";
-import { useAuth } from "./useAuth";
+import {
+  removeAccessToken,
+  useAccessToken,
+} from "./tokenStorage";
 
 export function useCurrentMember() {
-  const { accessToken, logout } = useAuth();
+  const accessToken = useAccessToken();
+  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: ["current-member"],
@@ -15,13 +19,19 @@ export function useCurrentMember() {
   });
 
   const unauthorized =
-    query.error instanceof ApiError && query.error.status === 401;
+    query.error instanceof ApiError &&
+    query.error.status === 401;
 
   useEffect(() => {
-    if (unauthorized) {
-      logout();
+    if (!unauthorized) {
+      return;
     }
-  }, [unauthorized, logout]);
+
+    removeAccessToken();
+    queryClient.removeQueries({
+      queryKey: ["current-member"],
+    });
+  }, [unauthorized, queryClient]);
 
   return query;
 }

@@ -20,8 +20,14 @@ export function getMember(memberId: number) {
   return apiRequest<MemberDetails>(`/members/${memberId}`);
 }
 
-export function updateMember(id:number,request: UpdateMemberRequest) {
+export function updateMember(id: number, request: UpdateMemberRequest) {
   return apiRequestWithoutResponse(`/members/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(request),
+  });
+}
+export function updateCurrentMember(request: UpdateMemberRequest) {
+  return apiRequest<void>("/auth/me", {
     method: "PUT",
     body: JSON.stringify(request),
   });
@@ -40,6 +46,7 @@ export function getMembers(request: GetMembersRequest) {
   return apiRequest<PagedResult<MemberSummary>>(
     `/members?${parameters.toString()}`,
   );
+
 }
 
   

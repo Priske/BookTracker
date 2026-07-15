@@ -1,21 +1,17 @@
 import { Link } from "react-router-dom";
 import { LogoutButton } from "./auth/LogoutButton";
-import { useAuth } from "./auth/useAuth";
+import { useAccessToken } from "./auth/tokenStorage";
 import { useCurrentMember } from "./auth/useCurrentMember";
 
 export function Navigation() {
-  const { accessToken } = useAuth();
   const currentMemberQuery = useCurrentMember();
-
-  const hasToken = accessToken !== null;
+  const hasToken = useAccessToken() !== null;
 
   return (
     <nav>
       <Link to="/">Home</Link>{" "}
       <Link to="/books">Books</Link>{" "}
-      {hasToken && currentMemberQuery.data?.role === "Administrator" && (
-        <Link to="/members">Members</Link>
-      )}{" "}
+
       {!hasToken && (
         <>
           <Link to="/register">Register</Link>{" "}

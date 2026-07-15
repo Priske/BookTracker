@@ -3,8 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ApiError } from "../api";
 import { login } from "./authApi";
-import { useAuth } from "./useAuth";
-
+import { setAccessToken } from "./tokenStorage";
 
 type LoginLocationState = {
   registered?: boolean;
@@ -12,28 +11,28 @@ type LoginLocationState = {
 };
 
 export function LoginPage() {
-    const location = useLocation();
+  const location = useLocation();
   const locationState = location.state as LoginLocationState | null;
+
   const [email, setEmail] = useState(locationState?.email ?? "");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-const { loginWithToken } = useAuth();
+  const loginMutation = useMutation({
+    mutationFn: login,
 
-const loginMutation = useMutation({
-  mutationFn: login,
+    onSuccess: async (response) => {
+      setAccessToken(response.accessToken);
 
-  onSuccess: async (response) => {
-    loginWithToken(response.accessToken);
+      await queryClient.invalidateQueries({
+        queryKey: ["current-member"],
+      });
 
-    await queryClient.invalidateQueries({
-      queryKey: ["current-member"],
-    });
-
-    navigate("/account");
-  },
-});
+      navigate("/account", { replace: true });
+    },
+  });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -41,11 +40,15 @@ const loginMutation = useMutation({
   }
 
   const invalidCredentials =
-    loginMutation.error instanceof ApiError && loginMutation.error.status === 401;
+    loginMutation.error instanceof ApiError &&
+    loginMutation.error.status === 401;
 
   return (
     <main>
-      {locationState?.registered && <p>Your account was created. You can now log in.</p>}
+      {locationState?.registered && (
+        <p>Your account was created. You can now log in.</p>
+      )}
+
       <h1>Log in</h1>
 
       <form onSubmit={handleSubmit}>
@@ -76,6 +79,7 @@ const loginMutation = useMutation({
         </button>
 
         {invalidCredentials && <p>Email or password is incorrect.</p>}
+
         {loginMutation.isError && !invalidCredentials && (
           <p>Login failed. Is the API running?</p>
         )}

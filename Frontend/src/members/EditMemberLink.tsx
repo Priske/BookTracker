@@ -3,17 +3,18 @@ import { useCurrentMember } from "../auth/useCurrentMember";
 
 type EditMemberLinkProps = {
   memberId: number;
-  fromMemberList?: boolean;
 };
 
-export function EditMemberLink({ memberId, fromMemberList = false }: EditMemberLinkProps) {
+export function EditMemberLink({ memberId }: EditMemberLinkProps) {
   const currentMemberQuery = useCurrentMember();
-  const member = currentMemberQuery.data;
 
-  if (!currentMemberQuery.isSuccess || !member) return null;
+  if (!currentMemberQuery.isSuccess) {
+    return null;
+  }
 
-  const isAuthorized = member.role === "Administrator" || (member.role === "Member" && member.id === memberId);
-  if (!isAuthorized) return null;
+  if (currentMemberQuery.data.role !== "Administrator") {
+    return null;
+  }
 
-  return <Link to={`/members/${memberId}/edit`} state={{ fromMemberList }}>Edit Member</Link>;
+  return <Link to={`/members/${memberId}/edit`}>Edit Member</Link>;
 }

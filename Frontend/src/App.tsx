@@ -11,7 +11,7 @@ import { Navigation } from "./Navigation";
 import { EditMemberPage } from "./members/EditMemberPage";
 import { MemberListPage } from "./members/MembersListPage";
 import { RequireAccountAccess } from "./auth/RequireAccountAccess";
-
+import { EditAccountPage } from "./members/EditAccountPage";
 
 function HomePage() {
   return <h1>Book Tracker</h1>;
@@ -21,11 +21,10 @@ export default function App() {
   return (
     <>
       <Navigation />
-      
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-
 
         <Route path="/books" element={<BookListPage />} />
         <Route element={<RequireAdministrator />}>
@@ -35,17 +34,16 @@ export default function App() {
         <Route path="/books/:bookId" element={<BookDetailsPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        <Route path="/members/:memberId/edit" element={<EditMemberPage />} />
         <Route element={<RequireAccountAccess />}>
           <Route path="/account" element={<AccountPage />} />
-          <Route path="/account/:memberId" element={<AccountPage />} />
-          <Route path="/members/:memberId/edit" element={<EditMemberPage />}/>
+          <Route path="/account/edit" element={<EditAccountPage />} />
+          <Route path="/members/:memberId/edit" element={<EditMemberPage />} />
         </Route>
+
         <Route element={<RequireAdministrator />}>
           <Route path="/members" element={<MemberListPage />} />
         </Route>
       </Routes>
-
     </>
   );
 }

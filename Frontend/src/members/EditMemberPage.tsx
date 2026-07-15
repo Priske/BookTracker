@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api";
-import type {  UpdateMemberRequest } from "./types";
+import type { UpdateMemberRequest } from "./types";
 import { getMember, updateMember } from "./membersApi";
 
 function readMemberId(value: string | undefined) {
@@ -11,66 +11,53 @@ function readMemberId(value: string | undefined) {
 }
 
 export function EditMemberPage() {
-    
-    const location = useLocation();
-    const fromMemberList = location.state?.fromMemberList === true;
-    const { memberId: memberIdParameter } = useParams();
-    const memberId = readMemberId(memberIdParameter);
-    const [formError, setFormError] = useState<string | null>(null);
-    const queryClient = useQueryClient();
-    const navigate = useNavigate();
-    const cancelPath = fromMemberList ? `/account/${memberId}` : "/account";
+  const { memberId: memberIdParameter } = useParams();
+  const memberId = readMemberId(memberIdParameter);
 
+  const [formError, setFormError] = useState<string | null>(null);
 
-  // DOUBLE CODE PULL AWAY PROBABLY
-    const memberQuery = useQuery({
-        queryKey: ["members", "detail", memberId],
-        queryFn: () => {
-        if (memberId === null) {
-          throw new Error("Invalid member id");
-          }
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-         return getMember(memberId);
-     },
-        enabled:memberId !== null,
-        retry: false,
-     });
+  const memberQuery = useQuery({
+    queryKey: ["members", "detail", memberId],
+    queryFn: () => {
+      if (memberId === null) {
+        throw new Error("Invalid member id");
+      }
 
-    const updateMutation = useMutation({
-        mutationFn: (request: UpdateMemberRequest) => {
-        if (memberId === null) {
-            throw new Error("Invalid member id");
-        } 
+      return getMember(memberId);
+    },
+    enabled: memberId !== null,
+    retry: false,
+  });
 
-      return updateMember(memberId,request);
+  const updateMutation = useMutation({
+    mutationFn: (request: UpdateMemberRequest) => {
+      if (memberId === null) {
+        throw new Error("Invalid member id");
+      }
+
+      return updateMember(memberId, request);
     },
     onSuccess: async () => {
-    await queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: ["members"],
-    });
+      });
 
-    await queryClient.refetchQueries({
-        queryKey: ["current-member"],
-        type: "all",
-    });
-
-    navigate(`/account/${memberId}`, { state: { fromMemberList } });
+      navigate(`/members/${memberId}`);
     },
   });
 
-   function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFormError(null);
-
-    if (!memberQuery.data) {
-      return;
-    }
 
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name")?.toString().trim() ?? "";
     const email = formData.get("email")?.toString().trim() ?? "";
-    const id =  memberId;
-    if (!id || !name || !email || !Number.isInteger(id)) {
+
+    if (!name || !email) {
       setFormError("Enter a valid name and email.");
       return;
     }
@@ -95,7 +82,8 @@ export function EditMemberPage() {
   }
 
   const queryNotFound =
-    memberQuery.error instanceof ApiError && memberQuery.error.status === 404;
+    memberQuery.error instanceof ApiError &&
+    memberQuery.error.status === 404;
 
   if (queryNotFound) {
     return (
@@ -111,14 +99,15 @@ export function EditMemberPage() {
   }
 
   const member = memberQuery.data;
+
   const mutationStatus =
     updateMutation.error instanceof ApiError
       ? updateMutation.error.status
       : null;
 
-       return (
+  return (
     <main>
-        <Link to={cancelPath} state={{ fromMemberList }}>Cancel</Link>
+      <Link to={`/members/${memberId}`}>Cancel</Link>
 
       <h1>Edit {member.name}</h1>
 
@@ -151,7 +140,7 @@ export function EditMemberPage() {
       {formError && <p>{formError}</p>}
       {mutationStatus === 400 && <p>The API rejected the member data.</p>}
       {mutationStatus === 401 && <p>Your login is missing or expired.</p>}
-      {mutationStatus === 403 && (<p>Only administrator or account holder can edit this member.</p>)}
+      {mutationStatus === 403 && <p>Only administrators can edit this member.</p>}
       {mutationStatus === 404 && <p>This member no longer exists.</p>}
       {updateMutation.isError && mutationStatus === null && (
         <p>Could not update the member.</p>
