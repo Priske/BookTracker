@@ -2,6 +2,7 @@ export type BookSummary = {
   id: number;
   title: string;
   author: string;
+  role: string;
 };
 
 export type GetBooksRequest = {

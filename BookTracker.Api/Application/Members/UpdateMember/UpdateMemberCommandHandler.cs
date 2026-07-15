@@ -12,6 +12,7 @@ public class UpdateMemberCommandHandler(IMemberRepository memberRepository) : IH
         int id,
         UpdateMemberRequest request)
     {
+
         MemberPermissions.EnsureCanManage(actor, id);
         var mail = new MemberEmail(request.Email);
         if (await memberRepository.EmailExistsAsync(mail, id))
