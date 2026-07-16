@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import type { UpdateMemberRequest } from "./types";
 import { getMember, updateMember } from "./membersApi";
+import { DeleteMemberButton } from "./DeleteBookButton";
 
 function readMemberId(value: string | undefined) {
   const memberId = Number(value);
@@ -45,7 +46,7 @@ export function EditMemberPage() {
         queryKey: ["members"],
       });
 
-      navigate(`/members/${memberId}`);
+      navigate(`/members/`);
     },
   });
 
@@ -107,7 +108,7 @@ export function EditMemberPage() {
 
   return (
     <main>
-      <Link to={`/members/${memberId}`}>Cancel</Link>
+      <Link to={`/members/`}>Cancel</Link>
 
       <h1>Edit {member.name}</h1>
 
@@ -136,7 +137,7 @@ export function EditMemberPage() {
           {updateMutation.isPending ? "Saving..." : "Save changes"}
         </button>
       </form>
-
+      <DeleteMemberButton memberId={member.id} />
       {formError && <p>{formError}</p>}
       {mutationStatus === 400 && <p>The API rejected the member data.</p>}
       {mutationStatus === 401 && <p>Your login is missing or expired.</p>}

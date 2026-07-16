@@ -49,4 +49,9 @@ export function getMembers(request: GetMembersRequest) {
 
 }
 
+export function deleteMember(bookId: number) {
+  return apiRequestWithoutResponse(`/members/${bookId}`, {
+    method: "DELETE",
+  });
+}
   

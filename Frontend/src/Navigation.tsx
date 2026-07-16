@@ -12,6 +12,11 @@ export function Navigation() {
       <Link to="/">Home</Link>{" "}
       <Link to="/books">Books</Link>{" "}
 
+      {hasToken && currentMemberQuery.data?.role === "Administrator" &&(
+        <>
+          <Link to="/members">Members</Link>
+        </>
+      )}{" "}
       {!hasToken && (
         <>
           <Link to="/register">Register</Link>{" "}
@@ -29,6 +34,7 @@ export function Navigation() {
           <LogoutButton />
         </>
       )}
+
 
       {hasToken && currentMemberQuery.isError && <LogoutButton />}
     </nav>

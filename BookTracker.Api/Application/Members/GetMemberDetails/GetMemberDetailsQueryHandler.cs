@@ -12,7 +12,7 @@ public class GetMemberDetailsQueryHandler(AppDbContext dbContext) : IHandler
         Actor actor,
         int id)
     {
-        MemberPermissions.EnsureCanManage(actor, id);
+        MemberPermissions.EnsureCanViewDirectory(actor);
 
         return await dbContext.Members
             .AsNoTracking()

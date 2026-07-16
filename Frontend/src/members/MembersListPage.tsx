@@ -79,7 +79,7 @@ export function MemberListPage() {
         <ul>
           {result.items.map((member) => (
             <li key={member.id}>
-             <Link to={`/account/${member.id}`} state={{ fromMemberList: true }}>
+             <Link to={`/members/${member.id}/edit`} state={{ fromMemberList: true }}>
                 <strong>ID: </strong> {member.id} <strong>NAME: </strong> {member.name} <strong>EMAIL</strong> { member.email}
               </Link>
             </li>

@@ -73,7 +73,6 @@ public static class MemberEndpoints
         {
             return Results.BadRequest(new { error = exception.Message });
         }
-
     }
     public static async Task<IResult> CreateMember(
         CreateMemberRequest request,

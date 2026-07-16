@@ -31,29 +31,24 @@ public static class AuthEndpoints
         return Results.Ok(response);
     }
 
-    private static IResult GetCurrentMember(
-        ClaimsPrincipal user)
+    private static async Task<IResult> GetCurrentMember(
+     ClaimsPrincipal principal,
+     GetCurrentMemberQueryHandler handler)
     {
-        var id =
-            user.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        var idValue = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        var name =
-            user.FindFirst(ClaimTypes.Name)!.Value;
+        if (!int.TryParse(idValue, out var id))
+        {
+            return Results.Unauthorized();
+        }
 
-        var email =
-            user.FindFirst(ClaimTypes.Email)!.Value;
+        var member = await handler.Execute(id);
 
-        var role =
-            user.FindFirst(ClaimTypes.Role)!.Value;
+        if (member is null)
+        {
+            return Results.NotFound();
+        }
 
-        return
-            Results.Ok(
-                new CurrentMemberResponse
-                {
-                    Id = int.Parse(id),
-                    Name = name,
-                    Email = email,
-                    Role = role
-                });
+        return Results.Ok(member);
     }
 }

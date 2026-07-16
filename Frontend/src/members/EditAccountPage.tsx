@@ -5,7 +5,7 @@ import { ApiError } from "../api";
 import { useCurrentMember } from "../auth/useCurrentMember";
 import type { UpdateMemberRequest } from "./types";
 import { updateMember } from "./membersApi";
-import { removeAccessToken } from "../auth/tokenStorage";
+import { DeleteMemberButton } from "./DeleteBookButton";
 
 export function EditAccountPage() {
   const currentMemberQuery = useCurrentMember();
@@ -13,33 +13,26 @@ export function EditAccountPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-const updateMutation = useMutation({
-  mutationFn: (request: UpdateMemberRequest) => {
-    const member = currentMemberQuery.data;
+  const updateMutation = useMutation({
+    mutationFn: (request: UpdateMemberRequest) => {
+      const member = currentMemberQuery.data;
 
-    if (!member) {
-      throw new Error("Current member is unavailable.");
-    }
+      if (!member) {
+        throw new Error("Current member is unavailable.");
+      }
 
-    return updateMember(member.id, request);
-  },
+      return updateMember(member.id, request);
+    },
 
-onSuccess: (_result, request) => {
-  removeAccessToken();
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["current-member"],
+        exact: true,
+      });
 
-  queryClient.removeQueries({
-    queryKey: ["current-member"],
-  });
-
-  navigate("/login", {
-    replace: true,
-    state: {
-      accountUpdated: true,
-      email: request.email,
+      navigate("/account", { replace: true });
     },
   });
-}
-});
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -54,10 +47,7 @@ onSuccess: (_result, request) => {
       return;
     }
 
-    updateMutation.mutate({
-      name,
-      email,
-    });
+    updateMutation.mutate({ name, email });
   }
 
   if (currentMemberQuery.isPending) {
@@ -119,7 +109,8 @@ onSuccess: (_result, request) => {
           {updateMutation.isPending ? "Saving..." : "Save changes"}
         </button>
       </form>
-
+      <DeleteMemberButton memberId={member.id} />
+      
       {formError && <p>{formError}</p>}
       {mutationStatus === 400 && <p>The API rejected the account data.</p>}
       {mutationStatus === 401 && <p>Your login is missing or expired.</p>}

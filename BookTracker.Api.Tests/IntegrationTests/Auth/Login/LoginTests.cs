@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using BookTracker.Api.Application.Auth.Login;
+using BookTracker.Api.Domain.Members;
 
 
 namespace BookTracker.Api.Tests.IntegrationTests.Auth.Login;
@@ -65,13 +66,16 @@ public class LoginTestTests : IntegrationTest
         var jwtToken = new JwtSecurityTokenHandler()
             .ReadJwtToken(content.AccessToken);
 
-        var email = jwtToken.Claims
-            .Single(claim => claim.Type == ClaimTypes.Email)
-            .Value;
+        var id = jwtToken.Claims.Single(
+            claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-        Assert.Equal("ada@example.com", email);
+        Assert.Equal("1", id);
+
+        var role = jwtToken.Claims.Single(
+            claim => claim.Type == ClaimTypes.Role).Value;
+
+        Assert.Equal(nameof(MemberRole.Member), role);
     }
-
     [Fact]
     public async Task LoginReturnsUnauthorizedForWrongPassword()
     {

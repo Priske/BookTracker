@@ -20,7 +20,6 @@ public class EfMemberRepository(AppDbContext dbContext) : IMemberRepository
         {
             return false;
         }
-
         dbContext.Members.Remove(member);
         await dbContext.SaveChangesAsync();
         return true;
@@ -50,5 +49,11 @@ public class EfMemberRepository(AppDbContext dbContext) : IMemberRepository
         await dbContext.SaveChangesAsync();
 
         return true;
+    }
+    public async Task<Member?> GetByIdAsync(int id)
+    {
+        return await dbContext.Members
+            .AsNoTracking()
+            .SingleOrDefaultAsync(member => member.Id == id);
     }
 }

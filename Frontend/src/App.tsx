@@ -37,12 +37,16 @@ export default function App() {
         <Route element={<RequireAccountAccess />}>
           <Route path="/account" element={<AccountPage />} />
           <Route path="/account/edit" element={<EditAccountPage />} />
+        </Route>
+
+        <Route element={<RequireAdministrator />}>
           <Route path="/members/:memberId/edit" element={<EditMemberPage />} />
         </Route>
 
         <Route element={<RequireAdministrator />}>
           <Route path="/members" element={<MemberListPage />} />
         </Route>
+        
       </Routes>
     </>
   );
