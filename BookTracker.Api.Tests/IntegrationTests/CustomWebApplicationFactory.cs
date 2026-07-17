@@ -11,6 +11,7 @@ namespace BookTracker.Api.Tests.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
+
     private SqliteConnection? connection;
     private static readonly KeyValuePair<string, string?>[]
         TestSettings =
@@ -37,6 +38,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
         builder.ConfigureAppConfiguration((context, config) =>
         {
             config.AddInMemoryCollection(
