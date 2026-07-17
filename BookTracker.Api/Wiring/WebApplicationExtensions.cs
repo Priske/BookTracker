@@ -18,7 +18,7 @@ public static class WebApplicationExtensions
 
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<Member>>();
-            //dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
 
             if (app.Configuration.GetValue<bool>("SeedDatabase"))
@@ -28,7 +28,7 @@ public static class WebApplicationExtensions
                     dbContext,
                     app.Configuration,
                     passwordHasher);
-                // DatabaseSeeder.SeedMembers(dbContext, 500);
+                DatabaseSeeder.SeedMembers(dbContext, 200);
             }
         }
 

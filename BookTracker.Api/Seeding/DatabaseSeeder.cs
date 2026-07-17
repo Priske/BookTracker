@@ -25,7 +25,7 @@ public static class DatabaseSeeder
 
     public static void SeedMembers(AppDbContext dbContext, int count = 50)
     {
-        if (dbContext.Members.Any())
+        if (dbContext.Members.Count() > 1)
         {
             return;
         }
@@ -99,7 +99,8 @@ public static class DatabaseSeeder
             passwordHasher.HashPassword(
                 administrator,
                 settings.Password);
-
+        Console.WriteLine("Admin E-mail: " + settings.Email);
+        Console.WriteLine("Admin pasword: " + settings.Password);
         dbContext.Members.Add(administrator);
         dbContext.SaveChanges();
     }
