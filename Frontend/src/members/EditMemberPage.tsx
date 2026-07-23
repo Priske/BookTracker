@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import type { UpdateMemberRequest } from "./types";
 import { getMember, updateMember } from "./membersApi";
-import { DeleteMemberButton } from "./DeleteBookButton";
+import { DeleteMemberButton } from "./DeleteUserButton";
 
 function readMemberId(value: string | undefined) {
   const memberId = Number(value);

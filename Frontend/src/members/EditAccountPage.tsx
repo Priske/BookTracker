@@ -5,7 +5,7 @@ import { ApiError } from "../api";
 import { useCurrentMember } from "../auth/useCurrentMember";
 import type { UpdateMemberRequest } from "./types";
 import { updateMember } from "./membersApi";
-import { DeleteMemberButton } from "./DeleteBookButton";
+import { DeleteMemberButton } from "./DeleteUserButton";
 
 export function EditAccountPage() {
   const currentMemberQuery = useCurrentMember();

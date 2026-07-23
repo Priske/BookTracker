@@ -19,7 +19,7 @@ public class DeleteMemberTests(PostgreSqlFixture database)
         await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-        var member = Reader.Query(db => db.Books.Find(1));
+        var member = Reader.Query(db => db.Members.Find(1));
 
         Assert.Null(member);
     }
