@@ -36,17 +36,8 @@ public static class MemberEndpoints
        ClaimsPrincipal principal,
        GetMemberSummariesQueryHandler handler)
     {
-        try
-        {
-            var actor = principal.ToActor();
-            var response = await handler.Execute(actor, request);
-
-            return Results.Ok(response);
-        }
-        catch (ForbiddenOperationException)
-        {
-            return Results.Forbid();
-        }
+        var response = await handler.Execute(principal.ToActor(), request);
+        return Results.Ok(response);
     }
 
     public static async Task<IResult> GetMemberDetails(
@@ -78,20 +69,8 @@ public static class MemberEndpoints
         CreateMemberRequest request,
         CreateMemberCommandHandler handler)
     {
-        try
-        {
-            var response = await handler.Execute(request);
-            return Results.Created($"/members/{response.Id}", response);
-        }
-        catch (MemberEmailAlreadyExistsException exception)
-        {
-            return Results.Conflict(new { error = exception.Message });
-        }
-        catch (DomainException exception)
-        {
-            return Results.BadRequest(new { error = exception.Message });
-        }
-
+        var response = await handler.Execute(request);
+        return Results.Created($"/members/{response.Id}", response);
     }
     public static async Task<IResult> UpdateMember(
         int id,
@@ -99,56 +78,25 @@ public static class MemberEndpoints
         UpdateMemberRequest request,
         UpdateMemberCommandHandler handler)
     {
-        try
-        {
-            var actor = principal.ToActor();
-            var updated = await handler.Execute(actor, id, request);
+        var actor = principal.ToActor();
+        var updated = await handler.Execute(actor, id, request);
 
-            if (!updated)
-            {
-                return Results.NotFound();
-            }
-            return Results.NoContent();
-        }
-        catch (ForbiddenOperationException)
-        {
-            return Results.Forbid();
-        }
-        catch (MemberEmailAlreadyExistsException exception)
-        {
-            return Results.Conflict(new { error = exception.Message });
-        }
-        catch (DomainException exception)
-        {
-            return Results.BadRequest(new { error = exception.Message });
-        }
+
+        return Results.NoContent();
     }
+
 
     public static async Task<IResult> DeleteMember(
         int id,
         ClaimsPrincipal principal,
         DeleteMemberCommandHandler handler)
     {
-        try
-        {
-            var actor = principal.ToActor();
-            var deleted = await handler.Execute(actor, id);
 
-            if (!deleted)
-            {
-                return Results.NotFound();
-            }
+        var actor = principal.ToActor();
+        var deleted = await handler.Execute(actor, id);
 
-            return Results.NoContent();
-        }
-        catch (ForbiddenOperationException)
-        {
-            return Results.Forbid();
-        }
-        catch (DomainException exception)
-        {
-            return Results.BadRequest(new { error = exception.Message });
-        }
+        return Results.NoContent();
+
 
     }
 
