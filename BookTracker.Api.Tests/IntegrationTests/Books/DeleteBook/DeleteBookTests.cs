@@ -4,7 +4,9 @@ using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Books.DeleteBook;
 
-public class DeleteBookTests : IntegrationTest
+[Collection(PostgreSqlCollection.Name)]
+public class DeleteBookTests(PostgreSqlFixture database)
+    : IntegrationTest(database)
 {
     [Fact]
     public async Task DeleteBookRemovesBook()

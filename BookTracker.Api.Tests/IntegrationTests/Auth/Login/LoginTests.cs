@@ -8,7 +8,10 @@ using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Auth.Login;
 
-public class LoginTestTests : IntegrationTest
+
+[Collection(PostgreSqlCollection.Name)]
+public class LoginTests(PostgreSqlFixture database)
+    : IntegrationTest(database)
 {
 
 

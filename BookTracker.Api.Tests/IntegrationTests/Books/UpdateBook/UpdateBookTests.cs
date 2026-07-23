@@ -7,7 +7,10 @@ using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Books.UpdateBook;
 
-public class UpdateBookTests : IntegrationTest
+
+[Collection(PostgreSqlCollection.Name)]
+public class UpdateBookTests(PostgreSqlFixture database)
+    : IntegrationTest(database)
 
 {
     [Fact]

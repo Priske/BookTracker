@@ -6,7 +6,10 @@ using BookTracker.Api.Domain.Books;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Books.GetBookSummaries;
 
-public class GetBookSummariesTests : IntegrationTest
+
+[Collection(PostgreSqlCollection.Name)]
+public class GetBookSummeriesTests(PostgreSqlFixture database)
+    : IntegrationTest(database)
 {
 
     [Fact]
