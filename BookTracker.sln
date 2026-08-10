@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Api.Tests", "Bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Api.IntegrationTests", "BookTracker.Api.IntegrationTests\BookTracker.Api.IntegrationTests.csproj", "{532E258A-003A-4208-9349-2AA19107B787}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Blazor", "BookTracker.Blazor\BookTracker.Blazor.csproj", "{160C3F9D-2EEC-49C1-80D8-E904622C3042}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{532E258A-003A-4208-9349-2AA19107B787}.Release|x64.Build.0 = Release|Any CPU
 		{532E258A-003A-4208-9349-2AA19107B787}.Release|x86.ActiveCfg = Release|Any CPU
 		{532E258A-003A-4208-9349-2AA19107B787}.Release|x86.Build.0 = Release|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Debug|x64.Build.0 = Debug|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Debug|x86.Build.0 = Debug|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Release|x64.ActiveCfg = Release|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Release|x64.Build.0 = Release|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Release|x86.ActiveCfg = Release|Any CPU
+		{160C3F9D-2EEC-49C1-80D8-E904622C3042}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
