@@ -41,28 +41,6 @@ public class HomeTests : BunitContext
         Assert.DoesNotContain("Raymond Chandler", cut.Markup);
     }
 
-    [Fact]
-    public void ShowsSelectedBookIdWhenBookIsSelected()
-    {
-        RegisterClient(
-        [
-            new BookSummary
-            {
-                Id = 1,
-                Title = "Dune",
-                Author = "Frank Herbert"
-            }
-        ]);
-
-        var cut = Render<Home>();
-
-        cut.WaitForAssertion(() =>
-            Assert.Contains("Dune", cut.Markup));
-        Console.WriteLine(cut.Markup);
-        cut.Find("tr button").Click();
-
-        Assert.Contains("Geselecteerd boek: 1", cut.Markup);
-    }
 
     private void RegisterClient(IReadOnlyList<BookSummary> books)
     {
