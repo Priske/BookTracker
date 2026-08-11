@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Blazor.Models.Books;
 
@@ -21,4 +22,20 @@ public sealed class BookTrackerClient(HttpClient httpClient)
         return await httpClient.GetFromJsonAsync<GetBookSummariesResponse>(url)
             ?? throw new InvalidOperationException("Book list response was empty.");
     }
+
+    public async Task<BookDetailsResponse?> GetBookDetails(int id)
+    {
+        using var response = await httpClient.GetAsync($"/books/{id}");
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<BookDetailsResponse>()
+            ?? throw new InvalidOperationException("Book details response was empty.");
+    }
+
 }

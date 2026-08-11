@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/booktracker"
+@inject NavigationManager NavigationManager
 
 @using BookTracker.Blazor.Components.Books
 
@@ -13,11 +14,6 @@
 
 <BookList ShowAuthor="@showAuthors" OnSelected="SelectBook" />
 
-@if (selectedBookId is not null)
-{
-    <p>Geselecteerd boek: @selectedBookId</p>
-}
-
 @code {
     private bool showAuthors = true;
 
@@ -30,6 +26,6 @@
 
     private void SelectBook(int bookId)
     {
-        selectedBookId = bookId;
+        NavigationManager.NavigateTo($"/books/{bookId}");
     }
 }

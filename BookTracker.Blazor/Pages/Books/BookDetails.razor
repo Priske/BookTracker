@@ -1,0 +1,84 @@
+@page "/books/{Id:int}"
+
+@using BookTracker.Blazor.Api
+@using BookTracker.Blazor.Models.Books
+
+@inject BookTrackerClient Client
+<PageTitle>Book Details</PageTitle>
+<div>
+    @if (result is null)
+    {
+        <span>Book with id: @Id was not found</span>
+    }
+    @if (isLoading)
+    {
+        <p>loading book...</p>
+    }
+    else if (error is not null)
+    {
+        <p>@error</p>
+    }
+    else if (result is not null)
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <th>Title: </th>
+                    <td> @result.Title</td>
+                </tr>
+                <tr>
+                    <th>author: </th>
+                    <td> @result.Author</td>
+                </tr>
+                <tr>
+                    <th>Year: </th>
+                    <td> @result.Year</td>
+                </tr>
+                <tr>
+                    <th>Year: </th>
+                    <td> @result.Version</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    <p>
+        <NavLink href="@($"/books/{Id + 1}")">
+            Next book
+        </NavLink>
+    </p>
+    <p>
+        <NavLink href="/booktracker">
+            Terug naar boeken
+        </NavLink>
+    </p>
+</div>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private bool isLoading = true;
+    private string? error;
+    private BookDetailsResponse? result;
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadBook();
+    }
+    private async Task LoadBook()
+    {
+        isLoading = true;
+        error = null;
+
+        try
+        {
+            result = await Client.GetBookDetails(Id);
+        }
+        catch
+        {
+            error = $"De boek met id {Id} konden niet geladen worden.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+}
