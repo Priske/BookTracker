@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BookTracker.Blazor;
+using BookTracker.Blazor.Api;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -14,5 +15,5 @@ builder.Services.AddScoped(_ =>
         BaseAddress = new Uri(apiBaseUrl)
     });
 
-
+builder.Services.AddScoped<BookTrackerClient>();
 await builder.Build().RunAsync();

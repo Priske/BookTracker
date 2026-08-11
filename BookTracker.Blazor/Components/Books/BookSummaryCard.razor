@@ -1,22 +1,25 @@
 @using BookTracker.Blazor.Models.Books
 
-<article>
-    <h2>@Book.Title</h2>
+<tr>
+    <td><b>Title:</b> @Book.Title</td>
 
     @if (ShowAuthor)
     {
-        <p>@Book.Author</p>
+        <td><b>Author:</b> @Book.Author</td>
     }
 
-    <button type="button" @onclick="SelectBook">
-        Selecteer
-    </button>
-</article>
+    <td>
+        <button type="button" @onclick="SelectBook">
+            Selecteer
+        </button>
+    </td>
+</tr>
 
 @code {
     [Parameter]
     public required BookSummary Book { get; set; }
 
+    
     [Parameter]
     public bool ShowAuthor { get; set; } = true;
 

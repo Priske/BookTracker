@@ -1,0 +1,109 @@
+@using BookTracker.Blazor.Api
+@using BookTracker.Blazor.Models.Books
+@inject BookTrackerClient Client
+<div>
+    <h1> Books</h1>
+    <p>
+        <label>Search by title or author
+            <input type="search" name="search" @bind="search" />
+            <button type="submit" @onclick="SearchBooks">Search</button>
+        </label>
+    </p>
+
+    <button @onclick="PreviousPage" disabled="@(currentPage <= 1)">
+        Previous
+    </button>
+
+    <span>Page @currentPage</span>
+
+    <button @onclick="NextPage" disabled="@(results is null || currentPage >= results.TotalPages)">
+        Next
+    </button>
+    @if (results is not null)
+    {
+        <span>Total pages @results.TotalPages</span>
+    }
+    @if (isLoading)
+    {
+        <p>Boeken laden...</p>
+    }
+    else if (error is not null)
+    {
+        <p>@error</p>
+    }
+    else if (results is not null)
+    {
+        <table>
+            <tbody>
+                @foreach (var book in results.Items)
+                {
+                    <BookSummaryCard Book="@book" ShowAuthor="@ShowAuthor" OnSelected="@OnSelected" />
+                }
+            </tbody>
+        </table>
+    }
+</div>
+@code {
+    [Parameter]
+    public bool ShowAuthor { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<int> OnSelected { get; set; }
+    private GetBookSummariesResponse? results;
+    private bool isLoading = true;
+    private string? error;
+    private string? search;
+    private int currentPage = 1;
+    private int pageSize = 10;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBooks();
+    }
+
+    private async Task SearchBooks()
+    {
+        currentPage = 1;
+        await LoadBooks();
+    }
+    private async Task LoadBooks()
+    {
+        isLoading = true;
+        error = null;
+
+        try
+        {
+            results = await Client.GetBooks(
+                search,
+                currentPage,
+                pageSize);
+        }
+        catch
+        {
+            error = "De boeken konden niet geladen worden.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (currentPage <= 1)
+            return;
+
+        currentPage--;
+        await LoadBooks();
+    }
+
+    private async Task NextPage()
+    {
+        if (results is null || currentPage >= results.TotalPages)
+            return;
+
+        currentPage++;
+        await LoadBooks();
+    }
+
+}
