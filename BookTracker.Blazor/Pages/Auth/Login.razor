@@ -5,7 +5,7 @@
 @using BookTracker.Blazor.Models.Auth
 
 @inject BookTrackerClient Client
-@inject IAuthSession AuthSession
+@inject BookTrackerAuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
 <PageTitle>Login</PageTitle>
@@ -70,8 +70,8 @@
                 return;
             }
 
-            await AuthSession.SaveToken(
-                response.AccessToken);
+            await AuthenticationStateProvider.SignInAsync(
+     response.AccessToken);
 
             NavigationManager.NavigateTo("/booktracker");
         }

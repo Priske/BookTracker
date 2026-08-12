@@ -20,9 +20,15 @@ public class JwtTokenGenerator(JwtSettings settings)
                  new(
                     ClaimTypes.NameIdentifier,
                     member.Id.ToString()),
+                 new(
+                    ClaimTypes.Name,
+                    member.Name.Value),
+                new(
+                    ClaimTypes.Email,
+                     member.Email.Value),
                 new(
                     ClaimTypes.Role,
-                    member.Role.ToString())
+                    member.Role.ToString()),
             };
 
         var signingKey =

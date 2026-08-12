@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BookTracker.Blazor;
 using BookTracker.Blazor.Api;
 using BookTracker.Blazor.Auth;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -28,7 +29,13 @@ builder.Services.AddScoped(serviceProvider =>
         BaseAddress = new Uri(apiBaseUrl)
     };
 });
+builder.Services.AddAuthorizationCore();
 
+builder.Services.AddScoped<BookTrackerAuthenticationStateProvider>();
+
+builder.Services.AddScoped<AuthenticationStateProvider>(
+    serviceProvider =>
+        serviceProvider.GetRequiredService<BookTrackerAuthenticationStateProvider>());
 builder.Services.AddScoped<BookTrackerClient>();
 
 await builder.Build().RunAsync();

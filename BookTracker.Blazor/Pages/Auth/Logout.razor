@@ -2,13 +2,13 @@
 
 @using BookTracker.Blazor.Auth
 
-@inject IAuthSession AuthSession
+@inject BookTrackerAuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthSession.RemoveToken();
+        await AuthenticationStateProvider.SignOutAsync();
 
         NavigationManager.NavigateTo("/booktracker");
     }
