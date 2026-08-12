@@ -1,0 +1,101 @@
+@using BookTracker.Blazor.Api
+@using BookTracker.Blazor.Models.Books;
+
+
+@inject BookTrackerClient Client
+@inject NavigationManager NavigationManager
+
+@page "/books/create"
+@attribute [Authorize(Roles = "Administrator")]
+
+<EditForm Model="@CreateBookRequest" OnValidSubmit="Create">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="title">Title:</label>
+        <InputText id="title" @bind-Value="CreateBookRequest.Title" />
+        <ValidationMessage For="() => CreateBookRequest.Title" />
+    </div>
+
+    <div>
+        <label for="author">Author:</label>
+        <InputText id="author" @bind-Value="CreateBookRequest.Author" />
+        <ValidationMessage For="() => CreateBookRequest.Author" />
+    </div>
+
+    <div>
+        <label for="year">Year:</label>
+        <InputNumber id="year" @bind-Value="CreateBookRequest.Year" />
+        <ValidationMessage For="() => CreateBookRequest.Year" />
+    </div>
+
+    <button type="submit" disabled="@isLoading">
+        Create Book
+    </button>
+</EditForm>
+
+@if (isLoading)
+{
+    <p>Creating book...</p>
+}
+@if (error is not null)
+{
+    <p>@error</p>
+}
+
+
+
+@code {
+    private CreateBookRequest CreateBookRequest { get; set; } = new CreateBookRequest();
+    private bool isLoading;
+
+    private string? error;
+}
+@code {
+    private async Task Create()
+    {
+        if (isLoading)
+        {
+            return;
+        }
+
+        isLoading = true;
+        error = null;
+
+        try
+        {
+            var result =
+                await Client.CreateBook(CreateBookRequest);
+
+            switch (result.Status)
+            {
+                case CreateBookStatus.Created:
+                    NavigationManager.NavigateTo(
+                        $"/books/{result.Book!.Id}");
+                    break;
+
+                case CreateBookStatus.ValidationFailed:
+                    error =
+                        result.ErrorMessage
+                        ?? "Invalid book data.";
+                    break;
+
+                case CreateBookStatus.Unauthorized:
+                    error = "You need to log in again.";
+                    break;
+
+                case CreateBookStatus.Forbidden:
+                    error = "You are not allowed to create books.";
+                    break;
+            }
+        }
+        catch
+        {
+            error = "Could not create book.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

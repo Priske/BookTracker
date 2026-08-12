@@ -47,7 +47,7 @@
 }
 
 @code {
-    private LoginRequest LoginRequest { get; set; } = new();
+    private LoginRequest LoginRequest { get; set; } = new LoginRequest();
 
     private bool isLoading;
     private bool invalidCredentials;
@@ -61,7 +61,7 @@
 
         try
         {
-            var response =
+            LoginResponse? response =
                 await Client.LoginUser(LoginRequest);
 
             if (response is null)

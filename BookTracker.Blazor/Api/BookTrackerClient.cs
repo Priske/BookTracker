@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using BookTracker.Blazor.Models;
 using BookTracker.Blazor.Models.Auth;
 using BookTracker.Blazor.Models.Books;
 
@@ -52,6 +53,48 @@ public sealed class BookTrackerClient(HttpClient httpClient)
 
         return await response.Content.ReadFromJsonAsync<LoginResponse>()
             ?? throw new InvalidOperationException("Login response was empty.");
+    }
+
+    public async Task<CreateBookResult> CreateBook(CreateBookRequest request)
+    {
+        using var response =
+            await httpClient.PostAsJsonAsync("/books", request);
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var errorResponse =
+                await response.Content.ReadFromJsonAsync<ErrorResponse>();
+
+            return new CreateBookResult(
+                CreateBookStatus.ValidationFailed,
+                ErrorMessage:
+                    errorResponse?.Error
+                    ?? "Invalid book data.");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            return new CreateBookResult(
+                CreateBookStatus.Unauthorized);
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            return new CreateBookResult(
+                CreateBookStatus.Forbidden);
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        var book =
+            await response.Content
+                .ReadFromJsonAsync<CreateBookResponse>()
+            ?? throw new InvalidOperationException(
+                "Create book response was empty.");
+
+        return new CreateBookResult(
+            CreateBookStatus.Created,
+            book);
     }
 
 }
