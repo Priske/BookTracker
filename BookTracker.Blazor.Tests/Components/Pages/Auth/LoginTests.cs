@@ -23,7 +23,9 @@ public class LoginTests : BunitContext
         RegisterClient(handler);
 
         var authSession = new FakeAuthSession();
+
         Services.AddSingleton<IAuthSession>(authSession);
+        Services.AddScoped<BookTrackerAuthenticationStateProvider>();
 
         var cut = Render<Login>();
 
@@ -56,7 +58,9 @@ public class LoginTests : BunitContext
         RegisterClient(handler);
 
         var authSession = new FakeAuthSession();
+
         Services.AddSingleton<IAuthSession>(authSession);
+        Services.AddScoped<BookTrackerAuthenticationStateProvider>();
 
         var navigationManager =
             Services.GetRequiredService<NavigationManager>();
@@ -70,7 +74,9 @@ public class LoginTests : BunitContext
 
         cut.WaitForAssertion(() =>
         {
-            Assert.Equal("test-token", authSession.Token);
+            Assert.Equal(
+                "test-token",
+                authSession.Token);
 
             Assert.EndsWith(
                 "/booktracker",
@@ -89,25 +95,5 @@ public class LoginTests : BunitContext
             new BookTrackerClient(httpClient));
     }
 
-    private sealed class FakeAuthSession : IAuthSession
-    {
-        public string? Token { get; private set; }
 
-        public Task SaveToken(string token)
-        {
-            Token = token;
-            return Task.CompletedTask;
-        }
-
-        public Task<string?> GetToken()
-        {
-            return Task.FromResult(Token);
-        }
-
-        public Task RemoveToken()
-        {
-            Token = null;
-            return Task.CompletedTask;
-        }
-    }
 }
