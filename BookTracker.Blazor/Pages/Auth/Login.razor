@@ -1,0 +1,87 @@
+@page "/login"
+
+@using BookTracker.Blazor.Api
+@using BookTracker.Blazor.Auth
+@using BookTracker.Blazor.Models.Auth
+
+@inject BookTrackerClient Client
+@inject IAuthSession AuthSession
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<EditForm Model="@LoginRequest" OnValidSubmit="SubmitLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="email">E-mail:</label>
+        <InputText id="email" @bind-Value="LoginRequest.Email" />
+        <ValidationMessage For="() => LoginRequest.Email" />
+    </div>
+
+    <div>
+        <label for="password">Password:</label>
+        <InputText id="password" type="password" @bind-Value="LoginRequest.Password" />
+        <ValidationMessage For="() => LoginRequest.Password" />
+    </div>
+
+    <button type="submit" disabled="@isLoading">
+        Login
+    </button>
+</EditForm>
+
+@if (isLoading)
+{
+    <p>Logging in...</p>
+}
+
+@if (invalidCredentials)
+{
+    <p>Invalid email or password.</p>
+}
+
+@if (error is not null)
+{
+    <p>@error</p>
+}
+
+@code {
+    private LoginRequest LoginRequest { get; set; } = new();
+
+    private bool isLoading;
+    private bool invalidCredentials;
+    private string? error;
+
+    private async Task SubmitLogin()
+    {
+        isLoading = true;
+        invalidCredentials = false;
+        error = null;
+
+        try
+        {
+            var response =
+                await Client.LoginUser(LoginRequest);
+
+            if (response is null)
+            {
+                invalidCredentials = true;
+                return;
+            }
+
+            await AuthSession.SaveToken(
+                response.AccessToken);
+
+            NavigationManager.NavigateTo("/booktracker");
+        }
+        catch
+        {
+            error = "Login failed.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
