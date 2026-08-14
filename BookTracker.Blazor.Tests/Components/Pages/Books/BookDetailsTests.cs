@@ -11,6 +11,11 @@ namespace BookTracker.Blazor.Tests.Components.Pages.Books;
 
 public class BookDetailsTests : BunitContext
 {
+    public BookDetailsTests()
+    {
+        AddAuthorization();
+    }
+
     [Fact]
     public void UsesRouteParameter()
     {
