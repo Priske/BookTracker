@@ -1,0 +1,116 @@
+@page "/books/{Id:int}/edit"
+
+@using BookTracker.Blazor.Api
+@using BookTracker.Blazor.Models.Books
+@attribute [Authorize(Roles = "Administrator")]
+
+@inject BookTrackerClient Client
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Book</PageTitle>
+
+@if (isLoading)
+{
+    <p>Loading book...</p>
+}
+else if (book is null)
+{
+    <p>@error</p>
+}
+else
+{
+    if (error is not null)
+    {
+        <p>@error</p>
+
+    }
+
+    <EditForm Model="book" OnValidSubmit="Save">
+        <DataAnnotationsValidator />
+
+        <div>
+            <label>Title</label>
+            <InputText @bind-Value="book.Title" />
+        </div>
+
+        <div>
+            <label>Author</label>
+            <InputText @bind-Value="book.Author" />
+        </div>
+
+        <div>
+            <label>Year</label>
+            <InputNumber @bind-Value="book.Year" />
+        </div>
+
+        <button type="submit">Save</button>
+    </EditForm>
+    <NavLink href="@($"/books/{Id}")">
+        Cancel
+    </NavLink>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool isLoading = true;
+    private string? error;
+    private UpdateBookRequest? book;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadBook();
+    }
+
+    private async Task LoadBook()
+    {
+        isLoading = true;
+        error = null;
+
+        try
+        {
+            var result = await Client.GetBookDetails(Id);
+
+            if (result is null)
+            {
+                error = $"Book with id {Id} was not found.";
+                return;
+            }
+
+            book = new UpdateBookRequest
+            {
+                Title = result.Title,
+                Author = result.Author,
+                Year = result.Year,
+                Version = result.Version
+            };
+        }
+        catch
+        {
+            error = $"Book with id {Id} could not be loaded.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task Save()
+    {
+        var result = await Client.EditBook(Id, book!);
+
+        if (result.Status == UpdateBookStatus.Updated)
+        {
+            NavigationManager.NavigateTo($"/books/{Id}");
+            return;
+        }
+
+        if (result.Status == UpdateBookStatus.Conflict)
+        {
+            await LoadBook();
+
+            error = result.ErrorMessage;
+        }
+    }
+}

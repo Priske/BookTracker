@@ -54,6 +54,52 @@ public sealed class BookTrackerClient(HttpClient httpClient)
         return await response.Content.ReadFromJsonAsync<LoginResponse>()
             ?? throw new InvalidOperationException("Login response was empty.");
     }
+    public async Task<UpdateBookResult> EditBook(
+        int id,
+        UpdateBookRequest request)
+    {
+        using var response =
+            await httpClient.PutAsJsonAsync($"/books/{id}", request);
+
+        if (response.StatusCode == HttpStatusCode.NoContent)
+        {
+            return new UpdateBookResult(
+                UpdateBookStatus.Updated);
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return new UpdateBookResult(
+                UpdateBookStatus.NotFound);
+        }
+
+        if (response.StatusCode == HttpStatusCode.Conflict)
+        {
+            var errorResponse =
+                await response.Content.ReadFromJsonAsync<ErrorResponse>();
+
+            return new UpdateBookResult(
+                UpdateBookStatus.Conflict,
+                errorResponse?.Error ?? "The book was changed by another user.");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            return new UpdateBookResult(
+                UpdateBookStatus.Unauthorized);
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            return new UpdateBookResult(
+                UpdateBookStatus.Forbidden);
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        throw new InvalidOperationException(
+            "Unexpected update response.");
+    }
 
     public async Task<CreateBookResult> CreateBook(CreateBookRequest request)
     {

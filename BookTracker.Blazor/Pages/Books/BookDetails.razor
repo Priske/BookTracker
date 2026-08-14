@@ -2,7 +2,7 @@
 
 @using BookTracker.Blazor.Api
 @using BookTracker.Blazor.Models.Books
-
+@using Microsoft.AspNetCore.Components.Authorization
 @inject BookTrackerClient Client
 <PageTitle>Book Details</PageTitle>
 <div>
@@ -41,10 +41,26 @@
             </tbody>
         </table>
     }
+    <AuthorizeView Roles="Administrator">
+        <p>
+            <NavLink href="@("/books/" + Id + "/edit")">
+                Edit Book
+            </NavLink>
+        </p>
+    </AuthorizeView>
     <p>
         <NavLink href="@($"/books/{Id + 1}")">
             Next book
         </NavLink>
+    </p>
+    <p>
+        @if (Id > 1)
+        {
+            <NavLink href="@($"/books/{Id + 1}")">
+                previous book
+            </NavLink>
+        }
+
     </p>
     <p>
         <NavLink href="/booktracker">
